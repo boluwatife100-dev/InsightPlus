@@ -1,0 +1,38 @@
+.ai-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ai-card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.ai-card__spark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-deep));
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.ai-card__spark svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.ai-card .card-title {
+  margin-bottom: 0;
+}
+
+.ai-card__summary {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+}

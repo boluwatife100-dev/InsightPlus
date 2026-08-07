@@ -1,0 +1,114 @@
+.auth {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+}
+
+/* Left decorative side (lavender gradient) */
+.auth__side {
+  background: linear-gradient(160deg, var(--color-primary), var(--color-primary-deep));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  padding: var(--space-8);
+}
+
+.auth__side-inner {
+  max-width: 26rem;
+}
+
+.auth__logo-link {
+  display: inline-block;
+  margin-bottom: var(--space-8);
+}
+
+.auth__side .logo__wordmark {
+  color: #fff;
+}
+
+.auth__quote {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.auth__quote-author {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: var(--text-sm);
+}
+
+/* Right panel */
+.auth__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  background-color: var(--color-bg);
+}
+
+.auth__card {
+  width: 100%;
+  max-width: 26rem;
+  padding: var(--space-7);
+}
+
+.auth__title {
+  font-size: var(--text-3xl);
+  margin-bottom: var(--space-2);
+}
+
+.auth__subtitle {
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-5);
+}
+
+.auth__tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+  background-color: var(--color-lavender);
+  border-radius: var(--radius-pill);
+  padding: var(--space-1);
+  margin-bottom: var(--space-6);
+}
+
+.auth__tab {
+  border: none;
+  background: transparent;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.auth__tab--active {
+  background-color: var(--color-surface);
+  color: var(--color-primary-deep);
+  box-shadow: var(--shadow-card);
+}
+
+.auth__demo-note {
+  margin-top: var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  text-align: center;
+}
+
+.auth__foot {
+  margin-top: var(--space-4);
+  font-size: var(--text-sm);
+}
+
+@media (max-width: 800px) {
+  .auth {
+    grid-template-columns: 1fr;
+  }
+
+  .auth__side {
+    display: none;
+  }
+}

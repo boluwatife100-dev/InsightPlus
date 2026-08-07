@@ -1,0 +1,77 @@
+/* ============================================================
+   InsightPlus — Design Tokens
+   Source: Figma "SHF Project" design system (violet / lavender)
+   Do not add new colors or fonts outside this file.
+   ============================================================ */
+
+:root {
+  /* ---- Brand (purple / violet) ---- */
+  --color-primary: #7c3aed;          /* primary action color   */
+  --color-primary-dark: #6d28d9;     /* hover / active states   */
+  --color-primary-deep: #5b21b6;     /* pressed / focus rings   */
+  --color-primary-light: #ede9fe;    /* tinted fills            */
+  --color-primary-faint: #f5f3ff;    /* soft backgrounds        */
+
+  /* ---- Backgrounds (lavender / white) ---- */
+  --color-bg: #f6f4fc;               /* page background (lavender) */
+  --color-surface: #ffffff;          /* cards, panels             */
+  --color-lavender: #f0edfa;         /* subtle section fill       */
+
+  /* ---- Text ---- */
+  --color-text: #1f1b33;             /* headings / primary text  */
+  --color-text-muted: #6b6490;       /* secondary text           */
+  --color-text-faint: #9b94bd;       /* placeholders / captions  */
+
+  /* ---- Borders & dividers ---- */
+  --color-border: #e7e2f5;
+  --color-border-strong: #d8d0f0;
+
+  /* ---- Semantic (sentiment) ---- */
+  --color-positive: #16a34a;         /* positive sentiment       */
+  --color-positive-light: #dcfce7;
+  --color-neutral: #f59e0b;          /* neutral sentiment        */
+  --color-neutral-light: #fef3c7;
+  --color-negative: #e11d48;         /* negative sentiment       */
+  --color-negative-light: #ffe4e6;
+
+  /* ---- Shape ---- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;                 /* rounded cards            */
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* ---- Elevation (soft shadows) ---- */
+  --shadow-card: 0 4px 20px rgba(93, 63, 211, 0.08);
+  --shadow-card-hover: 0 10px 30px rgba(93, 63, 211, 0.14);
+  --shadow-pop: 0 12px 40px rgba(93, 63, 211, 0.18);
+
+  /* ---- Typography (clean sans-serif) ---- */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+
+  /* ---- Spacing scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 2.5rem;
+  --space-8: 3rem;
+  --space-9: 4rem;
+  --space-10: 5rem;
+
+  /* ---- Layout ---- */
+  --sidebar-width: 16rem;
+  --content-max: 78rem;
+}
