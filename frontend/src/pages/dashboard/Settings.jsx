@@ -1,17 +1,55 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { businessService } from '../../services/index.js'
+import { useApi } from '../../hooks/useApi.js'
 import './Settings.css'
 
 // Settings page — business profile shell (UI only for the MVP demo).
-// Out of scope for the hackathon: real auth, multi-business, billing (PRD §10).
+// Loads the current business via businessService.getCurrentBusiness()
+// and updates it through businessService.updateBusiness().
 export default function Settings() {
-  const [businessName, setBusinessName] = useState('Rite Restaurant')
-  const [email, setEmail] = useState('sarah@riterestaurant.example')
+  const { data: business, error, loading, reload } = useApi(
+    () => businessService.getCurrentBusiness(),
+    [],
+  )
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [saveError, setSaveError] = useState(null)
 
-  const handleSubmit = (event) => {
+  useEffect(() => {
+    if (business) {
+      setName(business.name ?? '')
+      setEmail(business.email ?? '')
+    }
+  }, [business])
+
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2500)
+    if (saving) return
+    setSaving(true)
+    setSaveError(null)
+    try {
+      await businessService.updateBusiness({ name, email })
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2500)
+    } catch (err) {
+      setSaveError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (error) {
+    return (
+      <div className="card error-card" role="alert">
+        <p className="error-card__title">Couldn't load your business profile.</p>
+        <p className="error-card__detail">{error.message}</p>
+        <button type="button" className="btn btn-secondary btn-sm" onClick={reload}>
+          Try again
+        </button>
+      </div>
+    )
   }
 
   return (
@@ -34,8 +72,9 @@ export default function Settings() {
                 id="settings-business"
                 className="input"
                 type="text"
-                value={businessName}
-                onChange={(e) => setBusinessName(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                disabled={loading}
                 required
               />
             </div>
@@ -50,13 +89,19 @@ export default function Settings() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                disabled={loading}
                 required
               />
             </div>
 
-            <button type="submit" className="btn btn-primary">
-              Save changes
+            <button type="submit" className="btn btn-primary" disabled={loading || saving}>
+              {saving ? 'Saving…' : 'Save changes'}
             </button>
+            {saveError && (
+              <span className="settings__error" role="alert">
+                {saveError}
+              </span>
+            )}
             {saved && <span className="settings__saved">Saved ✓</span>}
           </form>
         </div>
@@ -68,7 +113,7 @@ export default function Settings() {
               Share this link — or print the QR code — so customers can reach your feedback form.
             </p>
             <div className="settings__link-row">
-              <code className="settings__link">insightplus.app/f/casa-verde</code>
+              <code className="settings__link">insightplus.app/f/{business?.id ?? 'your-business'}</code>
               <button type="button" className="btn btn-secondary">
                 Copy
               </button>

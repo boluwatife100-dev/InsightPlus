@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { NavLink, Outlet, Link, useLocation } from 'react-router-dom'
 import Logo from '../../components/Logo.jsx'
 import BusinessSwitcher from '../../components/dashboard/BusinessSwitcher.jsx'
-import { mockUser } from '../../data/mockData.js'
+import { authService, businessService } from '../../services/index.js'
+import { useApi } from '../../hooks/useApi.js'
 import './DashboardLayout.css'
 import './DashboardMobile.css'
 
@@ -79,6 +80,12 @@ export default function DashboardLayout() {
   const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
 
+  const meQuery = useApi(() => authService.getMe(), [])
+  const businessesQuery = useApi(() => businessService.listBusinesses(), [])
+  const me = meQuery.data
+  const businesses = businessesQuery.data ?? []
+  const firstName = me?.name?.split(' ')[0] ?? 'Sarah'
+
   const closeMenu = () => setMenuOpen(false)
   const isOverview = location.pathname === '/dashboard'
 
@@ -134,7 +141,7 @@ export default function DashboardLayout() {
           </Link>
         </div>
 
-        <BusinessSwitcher />
+        <BusinessSwitcher businesses={businesses} />
 
         <nav className="dash__nav" aria-label="Dashboard">
           <p className="dash__nav-label">Menu</p>
@@ -171,11 +178,11 @@ export default function DashboardLayout() {
 
         <div className="dash__profile">
           <span className="avatar dash__profile-avatar" aria-hidden="true">
-            {mockUser.initials}
+            {me?.initials ?? '·'}
           </span>
           <div className="dash__profile-meta">
-            <strong>{mockUser.name}</strong>
-            <span>{mockUser.role}</span>
+            <strong>{me?.name ?? 'Account'}</strong>
+            <span>{me?.role ?? 'Owner'}</span>
           </div>
           <Link to="/login" className="dash__logout" title="Log out" aria-label="Log out">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -223,7 +230,7 @@ export default function DashboardLayout() {
           </button>
         </div>
 
-        <BusinessSwitcher />
+        <BusinessSwitcher businesses={businesses} />
 
         <nav className="dash-mob__drawer-nav" aria-label="Dashboard">
           <p className="dash__nav-label">Menu</p>
@@ -261,11 +268,11 @@ export default function DashboardLayout() {
 
         <div className="dash__profile">
           <span className="avatar dash__profile-avatar" aria-hidden="true">
-            {mockUser.initials}
+            {me?.initials ?? '·'}
           </span>
           <div className="dash__profile-meta">
-            <strong>{mockUser.name}</strong>
-            <span>{mockUser.role}</span>
+            <strong>{me?.name ?? 'Account'}</strong>
+            <span>{me?.role ?? 'Owner'}</span>
           </div>
           <Link to="/login" className="dash__logout" title="Log out" aria-label="Log out">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -286,7 +293,7 @@ export default function DashboardLayout() {
         <header className="dash__topbar">
           {isOverview && (
             <div className="dash__greeting">
-              <strong>Good morning, {mockUser.name.split(' ')[0]}</strong>
+              <strong>Good morning, {firstName}</strong>
               <span>Here's what's happening at Rite Restaurant today.</span>
             </div>
           )}
@@ -334,7 +341,7 @@ export default function DashboardLayout() {
           {/* Mobile-only subhead: business pill, greeting, date chip */}
           <div className="dash-mob__subhead">
             <div className="dash-mob__subhead-row">
-              <BusinessSwitcher compact />
+              <BusinessSwitcher compact businesses={businesses} />
               <button type="button" className="dash__date-range dash-mob__date" aria-label="Change date range">
                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <rect x="3" y="4.5" width="18" height="17" rx="3" stroke="currentColor" strokeWidth="1.8" />
@@ -348,7 +355,7 @@ export default function DashboardLayout() {
             </div>
             {isOverview && (
               <div className="dash-mob__greeting">
-                <strong>Good morning, {mockUser.name.split(' ')[0]}</strong>
+                <strong>Good morning, {firstName}</strong>
                 <span>Here's what your customers are telling you</span>
               </div>
             )}

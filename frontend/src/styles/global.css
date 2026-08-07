@@ -314,6 +314,48 @@ img {
   letter-spacing: 0.02em;
 }
 
+/* ---- Loading skeleton (used while API data is fetched) ---- */
+.skeleton-card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    90deg,
+    var(--color-lavender) 25%,
+    var(--color-primary-faint) 50%,
+    var(--color-lavender) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.3s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ---- Inline error state (used by pages that load data) ---- */
+.error-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.error-card__title {
+  font-weight: 700;
+  color: var(--color-negative);
+}
+
+.error-card__detail {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-2);
+}
+
 /* Respect reduced-motion preferences (skill checklist) */
 @media (prefers-reduced-motion: reduce) {
   *,

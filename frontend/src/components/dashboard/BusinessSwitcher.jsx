@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import { mockBusinesses } from '../../data/mockData.js'
 import './BusinessSwitcher.css'
 
 // Business switcher — dropdown pill used in the desktop sidebar and the
 // mobile subhead. `compact` renders the mobile pill variant (no avatar/plan).
-export default function BusinessSwitcher({ compact = false, businesses = mockBusinesses }) {
+// The business list is supplied by the parent (fetched via
+// businessService.listBusinesses) so the switcher stays presentational.
+export default function BusinessSwitcher({ compact = false, businesses = [] }) {
   const [open, setOpen] = useState(false)
-  const [business, setBusiness] = useState(businesses[0])
+  const [business, setBusiness] = useState(null)
   const ref = useRef(null)
 
   useEffect(() => {
@@ -19,6 +20,12 @@ export default function BusinessSwitcher({ compact = false, businesses = mockBus
     return () => document.removeEventListener('mousedown', onClickOutside)
   }, [])
 
+  useEffect(() => {
+    if (!business && businesses.length > 0) {
+      setBusiness(businesses[0])
+    }
+  }, [businesses, business])
+
   return (
     <div className={`dash__switcher ${compact ? 'dash__switcher--compact' : ''}`} ref={ref}>
       <button
@@ -26,16 +33,17 @@ export default function BusinessSwitcher({ compact = false, businesses = mockBus
         className="dash__switcher-btn"
         aria-haspopup="listbox"
         aria-expanded={open}
+        disabled={businesses.length === 0}
         onClick={() => setOpen((prev) => !prev)}
       >
         {!compact && (
           <span className="dash__business-avatar" aria-hidden="true">
-            {business.initials}
+            {business?.initials ?? '·'}
           </span>
         )}
         <span className="dash__business-meta">
-          <strong>{business.name}</strong>
-          {!compact && <span>{business.plan}</span>}
+          <strong>{business?.name ?? 'Select business'}</strong>
+          {!compact && <span>{business?.plan ?? 'Loading…'}</span>}
         </span>
         <svg
           className={`dash__switcher-chevron ${open ? 'dash__switcher-chevron--open' : ''}`}
@@ -53,13 +61,13 @@ export default function BusinessSwitcher({ compact = false, businesses = mockBus
         </svg>
       </button>
 
-      {open && (
+      {open && businesses.length > 0 && (
         <ul className="dash__switcher-menu" role="listbox" aria-label="Switch business">
           {businesses.map((item) => (
-            <li key={item.id} role="option" aria-selected={item.id === business.id}>
+            <li key={item.id} role="option" aria-selected={item.id === business?.id}>
               <button
                 type="button"
-                className={`dash__switcher-option ${item.id === business.id ? 'dash__switcher-option--active' : ''}`}
+                className={`dash__switcher-option ${item.id === business?.id ? 'dash__switcher-option--active' : ''}`}
                 onClick={() => {
                   setBusiness(item)
                   setOpen(false)
@@ -72,7 +80,7 @@ export default function BusinessSwitcher({ compact = false, businesses = mockBus
                   <strong>{item.name}</strong>
                   <span>{item.plan}</span>
                 </span>
-                {item.id === business.id && (
+                {item.id === business?.id && (
                   <svg className="dash__switcher-check" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <path
                       d="M20 6L9 17l-5-5"

@@ -4,31 +4,70 @@ import AiInsightCard from '../../components/dashboard/AiInsightCard.jsx'
 import RecommendedActionCard from '../../components/dashboard/RecommendedActionCard.jsx'
 import IssuesBreakdown from '../../components/dashboard/IssuesBreakdown.jsx'
 import RecentFeedbackFeed from '../../components/dashboard/RecentFeedbackFeed.jsx'
-import {
-  mockCsat,
-  mockNewResponses,
-  mockFrictionPoints,
-  mockRecentFeedback,
-  mockAiSummary,
-  mockRecommendedAction,
-} from '../../data/mockData.js'
+import { dashboardService } from '../../services/index.js'
+import { config } from '../../config.js'
+import { useApi } from '../../hooks/useApi.js'
 
 // Overview page — 2×2×2 card grid (PRD §5.5, high-fidelity spec).
+// Data comes from dashboardService.getOverview(); one aggregate
+// backend call per date range.
 export default function Overview() {
+  const { data, error, loading, reload } = useApi(
+    () => dashboardService.getOverview(config.defaultRange),
+    [],
+  )
+
+  if (loading) {
+    return (
+      <div className="dash__grid" aria-busy="true">
+        <div className="dash__span-7">
+          <div className="card skeleton-card" style={{ height: '14rem' }} />
+        </div>
+        <div className="dash__span-5">
+          <div className="card skeleton-card" style={{ height: '14rem' }} />
+        </div>
+        <div className="dash__span-6">
+          <div className="card skeleton-card" style={{ height: '12rem' }} />
+        </div>
+        <div className="dash__span-6">
+          <div className="card skeleton-card" style={{ height: '12rem' }} />
+        </div>
+        <div className="dash__span-6">
+          <div className="card skeleton-card" style={{ height: '14rem' }} />
+        </div>
+        <div className="dash__span-6">
+          <div className="card skeleton-card" style={{ height: '14rem' }} />
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="card error-card" role="alert">
+        <p className="error-card__title">Couldn't load your dashboard.</p>
+        <p className="error-card__detail">{error.message}</p>
+        <button type="button" className="btn btn-secondary btn-sm" onClick={reload}>
+          Try again
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div>
       <div className="dash__grid">
         {/* Row 1 */}
         <div className="dash__span-7">
-          <CsatScoreCard csat={mockCsat} />
+          <CsatScoreCard csat={data.csat} />
         </div>
         <div className="dash__span-5">
           <StatCard
             label="New Responses"
-            value={mockNewResponses.count}
-            delta={mockNewResponses.delta}
+            value={data.newResponses.count}
+            delta={data.newResponses.delta}
             deltaTone="down"
-            spark={mockNewResponses.spark}
+            spark={data.newResponses.spark}
             icon={
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path
@@ -45,26 +84,18 @@ export default function Overview() {
 
         {/* Row 2 */}
         <div className="dash__span-6">
-          <AiInsightCard
-            summary={mockAiSummary}
-            highlights={[
-              'slow delivery',
-              'biggest pain point',
-              'lower star ratings',
-              'new menu prices',
-            ]}
-          />
+          <AiInsightCard summary={data.aiSummary.text} highlights={data.aiSummary.highlights} />
         </div>
         <div className="dash__span-6">
-          <RecommendedActionCard text={mockRecommendedAction.text} />
+          <RecommendedActionCard text={data.recommendedAction.text} />
         </div>
 
         {/* Row 3 */}
         <div className="dash__span-6">
-          <IssuesBreakdown issues={mockFrictionPoints} />
+          <IssuesBreakdown issues={data.frictionPoints} />
         </div>
         <div className="dash__span-6">
-          <RecentFeedbackFeed items={mockRecentFeedback} />
+          <RecentFeedbackFeed items={data.recentFeedback} />
         </div>
       </div>
     </div>

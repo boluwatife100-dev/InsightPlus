@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Logo from '../components/Logo.jsx'
 import StarRating from '../components/StarRating.jsx'
+import { feedbackService } from '../services/index.js'
 import './FeedbackForm.css'
 
 const CATEGORIES = ['Food', 'Service', 'Pricing', 'Cleanliness', 'Ambience', 'Other']
@@ -18,17 +19,28 @@ const RATING_LABELS = {
 const COMMENT_MAX = 500
 
 // Public feedback form — no login required (PRD §5.1).
-// Phase 3: POST the submitted data to the agreed backend API contract;
-// until then it navigates to the confirmation screen with local state.
+// Submissions POST to feedbackService.submitFeedback() (mocked for now,
+// real backend via VITE_USE_MOCK=false) before showing confirmation.
 export default function FeedbackForm() {
   const [rating, setRating] = useState(0)
   const [category, setCategory] = useState('')
   const [comment, setComment] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState(null)
   const navigate = useNavigate()
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    navigate('/thank-you', { state: { rating, category, comment } })
+    if (submitting || rating === 0) return
+    setSubmitting(true)
+    setSubmitError(null)
+    try {
+      await feedbackService.submitFeedback({ rating, category, comment })
+      navigate('/thank-you', { state: { rating, category, comment } })
+    } catch (err) {
+      setSubmitError(err.message)
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -110,10 +122,15 @@ export default function FeedbackForm() {
             <button
               type="submit"
               className="btn btn-primary btn-block btn-lg"
-              disabled={rating === 0}
+              disabled={rating === 0 || submitting}
             >
-              Submit feedback
+              {submitting ? 'Submitting…' : 'Submit feedback'}
             </button>
+            {submitError && (
+              <p className="feedback__error" role="alert">
+                {submitError}
+              </p>
+            )}
           </form>
 
           <p className="feedback__privacy">

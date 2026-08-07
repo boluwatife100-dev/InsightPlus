@@ -1,7 +1,8 @@
 import { useDeferredValue, useMemo, useState } from 'react'
 import StarRating from '../../components/StarRating.jsx'
 import SentimentBadge from '../../components/SentimentBadge.jsx'
-import { mockFeedback } from '../../data/mockData.js'
+import { feedbackService } from '../../services/index.js'
+import { useApi } from '../../hooks/useApi.js'
 import './FeedbackPage.css'
 
 const SENTIMENT_FILTERS = [
@@ -14,9 +15,11 @@ const SENTIMENT_FILTERS = [
 const CATEGORY_FILTERS = ['All', 'Food', 'Service', 'Pricing', 'Cleanliness', 'Ambience']
 
 // Feedback page — full list view of all submissions with auto-tags
-// (sentiment + theme). Search is deferred (skill §react: useDeferredValue
-// for search inputs) and filters apply instantly. Phase 3: live data.
+// (sentiment + theme). Data comes from feedbackService.listFeedback()
+// (with optional server-side filters documented in the service);
+// search/ filters apply instantly client-side for now.
 export default function Feedback() {
+  const { data, error, loading, reload } = useApi(() => feedbackService.listFeedback(), [])
   const [query, setQuery] = useState('')
   const [sentiment, setSentiment] = useState('all')
   const [category, setCategory] = useState('All')
@@ -24,14 +27,26 @@ export default function Feedback() {
 
   const filtered = useMemo(() => {
     const q = deferredQuery.trim().toLowerCase()
-    return mockFeedback.filter((item) => {
+    return (data ?? []).filter((item) => {
       const matchesQuery =
         q === '' || item.comment.toLowerCase().includes(q) || item.category.toLowerCase().includes(q)
       const matchesSentiment = sentiment === 'all' || item.sentiment === sentiment
       const matchesCategory = category === 'All' || item.category === category
       return matchesQuery && matchesSentiment && matchesCategory
     })
-  }, [deferredQuery, sentiment, category])
+  }, [deferredQuery, sentiment, category, data])
+
+  if (error) {
+    return (
+      <div className="card error-card" role="alert">
+        <p className="error-card__title">Couldn't load feedback.</p>
+        <p className="error-card__detail">{error.message}</p>
+        <button type="button" className="btn btn-secondary btn-sm" onClick={reload}>
+          Try again
+        </button>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -86,13 +101,15 @@ export default function Feedback() {
         </div>
 
         <span className="feedback-page__count" aria-live="polite">
-          {filtered.length} of {mockFeedback.length} responses
+          {loading ? 'Loading…' : `${filtered.length} of ${data?.length ?? 0} responses`}
         </span>
       </div>
 
       {/* Results */}
-      <div className="card">
-        {filtered.length === 0 ? (
+      <div className="card" aria-busy={loading}>
+        {loading ? (
+          <div className="card skeleton-card" style={{ height: '12rem' }} />
+        ) : filtered.length === 0 ? (
           <div className="feedback-page__empty">
             <p>No responses match your filters.</p>
             <button

@@ -1,37 +1,49 @@
 import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import Logo from '../components/Logo.jsx'
+import { authService } from '../services/index.js'
+import { DEMO_CREDENTIALS } from '../config.js'
 import './Login.css'
 
-// Demo account for the hackathon (PRD §10 — auth is mocked, no backend).
-// Use the quick-login button or enter the credentials below:
-//   email: demo@insightplus.app   password: demo1234
-const DEMO_ACCOUNT = {
-  email: 'demo@insightplus.app',
-  password: 'demo1234',
-  business: 'Rite Restaurant',
-}
-
+// Login / signup screen. Submissions hit authService.login() (mocked for
+// the hackathon: demo@insightplus.app / demo1234, real backend via
+// VITE_USE_MOCK=false).
 export default function Login() {
   const [searchParams] = useSearchParams()
   const [mode, setMode] = useState(searchParams.get('mode') === 'signup' ? 'signup' : 'login')
   const [businessName, setBusinessName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [authError, setAuthError] = useState(null)
   const navigate = useNavigate()
 
-  const switchMode = (next) => setMode(next)
+  const switchMode = (next) => {
+    setMode(next)
+    setAuthError(null)
+  }
 
   const fillDemoAccount = () => {
     setMode('login')
-    setBusinessName(DEMO_ACCOUNT.business)
-    setEmail(DEMO_ACCOUNT.email)
-    setPassword(DEMO_ACCOUNT.password)
+    setBusinessName(DEMO_CREDENTIALS.business)
+    setEmail(DEMO_CREDENTIALS.email)
+    setPassword(DEMO_CREDENTIALS.password)
+    setAuthError(null)
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    navigate('/dashboard')
+    if (submitting) return
+    setSubmitting(true)
+    setAuthError(null)
+    try {
+      await authService.login({ email, password })
+      navigate('/dashboard')
+    } catch (err) {
+      setAuthError(err.message)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -148,8 +160,14 @@ export default function Login() {
               />
             </div>
 
-            <button type="submit" className="btn btn-primary btn-block btn-lg">
-              {mode === 'login' ? 'Log in' : 'Create account'}
+            {authError && (
+              <p className="auth__error" role="alert">
+                {authError}
+              </p>
+            )}
+
+            <button type="submit" className="btn btn-primary btn-block btn-lg" disabled={submitting}>
+              {submitting ? 'Signing in…' : mode === 'login' ? 'Log in' : 'Create account'}
             </button>
           </form>
 
@@ -159,12 +177,13 @@ export default function Login() {
               Use demo account
             </button>
             <p className="auth__demo-creds">
-              {DEMO_ACCOUNT.email} · {DEMO_ACCOUNT.password}
+              {DEMO_CREDENTIALS.email} · {DEMO_CREDENTIALS.password}
             </p>
           </div>
 
           <p className="auth__demo-note">
-            Demo mode — authentication is mocked for the hackathon. No real account is created.
+            Demo mode — authentication goes through authService, mocked for the hackathon. No real
+            account is created.
           </p>
         </div>
 
