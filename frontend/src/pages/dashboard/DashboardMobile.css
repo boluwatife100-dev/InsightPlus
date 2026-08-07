@@ -1,0 +1,312 @@
+/* ============================================================
+   InsightPlus — Mobile layout (≤720px, 390px target)
+   Single-column restructure of the desktop dashboard:
+   compact header, business pill + greeting + date chip, stacked
+   cards, bottom tab bar, slide-in drawer. iOS safe areas via
+   env(safe-area-inset-*). All elements below are hidden on
+   desktop by default.
+   ============================================================ */
+
+.dash-mob__bar,
+.dash-mob__subhead,
+.dash-mob__tabs,
+.dash-mob__drawer,
+.dash-mob__scrim {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  /* ---- Shell: sidebar & desktop topbar replaced ---- */
+  .dash {
+    display: block;
+  }
+
+  .dash__sidebar {
+    display: none;
+  }
+
+  .dash__topbar {
+    display: none;
+  }
+
+  .dash__main {
+    display: block;
+  }
+
+  .dash__content {
+    padding: 0 var(--space-4) calc(5.5rem + env(safe-area-inset-bottom));
+  }
+
+  .dash__grid {
+    gap: var(--space-3);
+  }
+
+  /* ================= Compact top bar ================= */
+  .dash-mob__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    height: calc(3.5rem + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) var(--space-3) 0;
+    background-color: rgba(246, 244, 252, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .dash-mob__logo {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .dash-mob__logo .logo__wordmark {
+    font-size: 1.05rem;
+  }
+
+  .dash-mob__icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    position: relative;
+    transition: background-color var(--motion-fast) ease;
+  }
+
+  .dash-mob__icon-btn:hover {
+    background-color: var(--color-lavender);
+  }
+
+  .dash-mob__icon-btn svg {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  .dash-mob__notif-dot {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.55rem;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background-color: var(--color-negative);
+    border: 2px solid var(--color-bg);
+  }
+
+  /* ================= Sticky subhead: pill, greeting, date ================= */
+  .dash-mob__subhead {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    position: sticky;
+    top: calc(3.5rem + env(safe-area-inset-top));
+    z-index: 35;
+    margin: 0 calc(-1 * var(--space-4)) var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    background-color: rgba(246, 244, 252, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .dash-mob__subhead-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  /* Business pill (compact switcher) */
+  .dash-mob__subhead .dash__switcher {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .dash-mob__subhead .dash__switcher-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: auto;
+    padding: var(--space-2) var(--space-3);
+    background-color: var(--color-surface);
+    background-image: none;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-border-strong);
+    box-shadow: var(--shadow-xs);
+  }
+
+  .dash-mob__subhead .dash__switcher-btn .dash__business-meta strong {
+    font-size: var(--text-sm);
+  }
+
+  .dash-mob__subhead .dash__switcher-menu {
+    top: calc(100% + var(--space-1));
+  }
+
+  /* Date range chip */
+  .dash-mob__subhead .dash__date-range {
+    flex-shrink: 0;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-pill);
+    font-size: var(--text-xs);
+    box-shadow: var(--shadow-xs);
+  }
+
+  .dash-mob__subhead .dash__date-range svg {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+
+  /* Greeting (smaller than desktop) */
+  .dash-mob__greeting {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.35;
+  }
+
+  .dash-mob__greeting strong {
+    font-size: var(--text-xl);
+    letter-spacing: -0.01em;
+  }
+
+  .dash-mob__greeting span {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  /* ================= Bottom tab bar ================= */
+  .dash-mob__tabs {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    background-color: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .dash-mob__tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.5rem 0.25rem calc(0.55rem);
+    color: var(--color-text-faint);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1.2;
+    min-width: 0;
+    transition: color var(--motion-fast) ease;
+  }
+
+  .dash-mob__tab:hover {
+    color: var(--color-text-muted);
+  }
+
+  .dash-mob__tab-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: var(--radius-sm);
+    transition: background-color var(--motion-fast) ease, color var(--motion-fast) ease;
+  }
+
+  .dash-mob__tab-icon svg {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+
+  .dash-mob__tab-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .dash-mob__tab--active {
+    color: var(--color-primary-dark);
+  }
+
+  .dash-mob__tab--active .dash-mob__tab-icon {
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+  }
+
+  /* ================= Slide-in drawer ================= */
+  .dash-mob__scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 45;
+    background-color: rgba(33, 27, 54, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--motion-base) ease;
+  }
+
+  .dash-mob__scrim--open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .dash-mob__drawer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 50;
+    width: min(84vw, 21rem);
+    padding: calc(var(--space-5) + env(safe-area-inset-top)) var(--space-5)
+      calc(var(--space-6) + env(safe-area-inset-bottom));
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-pop);
+    transform: translateX(-105%);
+    transition: transform var(--motion-base) var(--ease-out);
+    overflow-y: auto;
+  }
+
+  .dash-mob__drawer--open {
+    transform: translateX(0);
+  }
+
+  .dash-mob__drawer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .dash-mob__drawer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    flex: 1;
+  }
+
+  .dash-mob__drawer-nav .dash__nav-link {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  /* Re-show support/profile cards inside the drawer
+     (the desktop media query hides them elsewhere) */
+  .dash-mob__drawer .dash__support {
+    display: block;
+  }
+
+  .dash-mob__drawer .dash__profile {
+    display: flex;
+  }
+}

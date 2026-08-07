@@ -141,6 +141,10 @@
   flex-shrink: 0;
 }
 
+.csat-card__spark {
+  display: none;
+}
+
 .csat-card__bar-col {
   display: flex;
   flex-direction: column;
@@ -174,13 +178,24 @@
 }
 
 @media (max-width: 720px) {
+  .csat-card {
+    padding: var(--space-5);
+    gap: var(--space-4);
+  }
+
   .csat-card__body {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: var(--space-4);
   }
 
   .csat-card__bars {
+    display: none;
+  }
+
+  .csat-card__spark {
+    display: block;
     width: 100%;
-    justify-content: space-between;
+    height: 2.5rem;
   }
 }

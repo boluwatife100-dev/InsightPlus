@@ -25,6 +25,7 @@ export const mockCsat = {
   responses: '1,248 responses',
   distribution: [82, 69, 44, 57, 38], // per-star counts (5..1) for the mini chart
   stars: [5, 4, 3, 2, 1], // rendered as partial-fill star row
+  spark: [3.8, 3.9, 4.2, 4.0, 3.9, 4.1], // weekly trend for the compact sparkline
 }
 
 export const mockNewResponses = {

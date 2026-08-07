@@ -1,8 +1,12 @@
+import { useState } from 'react'
 import './AiInsightCard.css'
 
 // AI-generated summary of what customers are saying (PRD §5.5).
 // Key phrases passed in `highlights` are rendered bold for scanning.
+// On mobile the summary collapses to 3 lines with a "Read more" toggle.
 export default function AiInsightCard({ summary, highlights = [] }) {
+  const [expanded, setExpanded] = useState(false)
+
   let nodes = [summary]
   for (const phrase of highlights) {
     nodes = nodes.flatMap((node) =>
@@ -36,7 +40,29 @@ export default function AiInsightCard({ summary, highlights = [] }) {
           <p className="card-subtitle">What customers are saying this month</p>
         </div>
       </div>
-      <p className="ai-card__summary">{nodes}</p>
+      <p className={`ai-card__summary ${!expanded ? 'ai-card__summary--clamp' : ''}`}>{nodes}</p>
+      <button
+        type="button"
+        className="ai-card__more"
+        aria-expanded={expanded}
+        onClick={() => setExpanded((prev) => !prev)}
+      >
+        {expanded ? 'Show less' : 'Read more'}
+        <svg
+          className={`ai-card__more-chevron ${expanded ? 'ai-card__more-chevron--open' : ''}`}
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M6 9l6 6 6-6"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
     </div>
   )
 }

@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, Outlet, Link, useLocation } from 'react-router-dom'
 import Logo from '../../components/Logo.jsx'
-import { mockBusinesses, mockUser } from '../../data/mockData.js'
+import BusinessSwitcher from '../../components/dashboard/BusinessSwitcher.jsx'
+import { mockUser } from '../../data/mockData.js'
 import './DashboardLayout.css'
+import './DashboardMobile.css'
 
 const NAV_ITEMS = [
   {
@@ -70,30 +72,61 @@ const NAV_ITEMS = [
   },
 ]
 
-const SIDEBAR_NAV = NAV_ITEMS
-
-// Dashboard shell: business switcher + nav + support/profile cards in the
-// sidebar; greeting + date range + "+ New Survey" CTA in the top bar.
+// Dashboard shell. Desktop: sidebar + top bar. Mobile (≤720px): compact
+// header, business pill + greeting + date chip, stacked content, bottom
+// tab bar, and a slide-in drawer for nav/support/profile.
 export default function DashboardLayout() {
-  const [businessOpen, setBusinessOpen] = useState(false)
-  const [business, setBusiness] = useState(mockBusinesses[0])
-  const switcherRef = useRef(null)
+  const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
 
-  useEffect(() => {
-    function onClickOutside(event) {
-      if (switcherRef.current && !switcherRef.current.contains(event.target)) {
-        setBusinessOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', onClickOutside)
-    return () => document.removeEventListener('mousedown', onClickOutside)
-  }, [])
-
+  const closeMenu = () => setMenuOpen(false)
   const isOverview = location.pathname === '/dashboard'
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [menuOpen])
 
   return (
     <div className="dash">
+      {/* Mobile-only top bar */}
+      <header className="dash-mob__bar">
+        <button
+          type="button"
+          className="dash-mob__icon-btn"
+          aria-label="Open menu"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen(true)}
+        >
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M4 6.5h16M4 12h16M4 17.5h16"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+          </svg>
+        </button>
+        <Link to="/" className="dash-mob__logo" aria-label="InsightPlus home">
+          <Logo />
+        </Link>
+        <button type="button" className="dash-mob__icon-btn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <span className="dash-mob__notif-dot" aria-hidden="true" />
+        </button>
+      </header>
+
+      {/* Desktop sidebar */}
       <aside className="dash__sidebar">
         <div className="dash__sidebar-head">
           <Link to="/" aria-label="InsightPlus home">
@@ -101,79 +134,11 @@ export default function DashboardLayout() {
           </Link>
         </div>
 
-        {/* Business switcher */}
-        <div className="dash__switcher" ref={switcherRef}>
-          <button
-            type="button"
-            className="dash__switcher-btn"
-            aria-haspopup="listbox"
-            aria-expanded={businessOpen}
-            onClick={() => setBusinessOpen((open) => !open)}
-          >
-            <span className="dash__business-avatar" aria-hidden="true">
-              {business.initials}
-            </span>
-            <span className="dash__business-meta">
-              <strong>{business.name}</strong>
-              <span>{business.plan}</span>
-            </span>
-            <svg
-              className={`dash__switcher-chevron ${businessOpen ? 'dash__switcher-chevron--open' : ''}`}
-              viewBox="0 0 24 24"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M6 9l6 6 6-6"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
+        <BusinessSwitcher />
 
-          {businessOpen && (
-            <ul className="dash__switcher-menu" role="listbox" aria-label="Switch business">
-              {mockBusinesses.map((item) => (
-                <li key={item.id} role="option" aria-selected={item.id === business.id}>
-                  <button
-                    type="button"
-                    className={`dash__switcher-option ${item.id === business.id ? 'dash__switcher-option--active' : ''}`}
-                    onClick={() => {
-                      setBusiness(item)
-                      setBusinessOpen(false)
-                    }}
-                  >
-                    <span className="dash__business-avatar dash__business-avatar--sm" aria-hidden="true">
-                      {item.initials}
-                    </span>
-                    <span className="dash__business-meta">
-                      <strong>{item.name}</strong>
-                      <span>{item.plan}</span>
-                    </span>
-                    {item.id === business.id && (
-                      <svg className="dash__switcher-check" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <path
-                          d="M20 6L9 17l-5-5"
-                          stroke="currentColor"
-                          strokeWidth="2.4"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    )}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        {/* Nav */}
         <nav className="dash__nav" aria-label="Dashboard">
           <p className="dash__nav-label">Menu</p>
-          {SIDEBAR_NAV.map((item) => (
+          {NAV_ITEMS.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
@@ -188,7 +153,6 @@ export default function DashboardLayout() {
           ))}
         </nav>
 
-        {/* Support card */}
         <div className="dash__support">
           <p className="dash__support-title">Need help?</p>
           <Link to="/login" className="dash__support-link">
@@ -205,7 +169,96 @@ export default function DashboardLayout() {
           </Link>
         </div>
 
-        {/* Profile card */}
+        <div className="dash__profile">
+          <span className="avatar dash__profile-avatar" aria-hidden="true">
+            {mockUser.initials}
+          </span>
+          <div className="dash__profile-meta">
+            <strong>{mockUser.name}</strong>
+            <span>{mockUser.role}</span>
+          </div>
+          <Link to="/login" className="dash__logout" title="Log out" aria-label="Log out">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4m7 14l5-5-5-5m5 5H9"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </Link>
+        </div>
+      </aside>
+
+      {/* Mobile slide-in drawer */}
+      <div
+        className={`dash-mob__scrim ${menuOpen ? 'dash-mob__scrim--open' : ''}`}
+        aria-hidden="true"
+        onClick={closeMenu}
+      />
+      <aside
+        className={`dash-mob__drawer ${menuOpen ? 'dash-mob__drawer--open' : ''}`}
+        aria-hidden={!menuOpen}
+        inert={!menuOpen}
+      >
+        <div className="dash-mob__drawer-head">
+          <Link to="/" aria-label="InsightPlus home" onClick={closeMenu}>
+            <Logo />
+          </Link>
+          <button
+            type="button"
+            className="dash-mob__icon-btn"
+            aria-label="Close menu"
+            onClick={closeMenu}
+          >
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M6 6l12 12M18 6L6 18"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <BusinessSwitcher />
+
+        <nav className="dash-mob__drawer-nav" aria-label="Dashboard">
+          <p className="dash__nav-label">Menu</p>
+          {NAV_ITEMS.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              onClick={closeMenu}
+              className={({ isActive }) =>
+                `dash__nav-link ${isActive ? 'dash__nav-link--active' : ''}`
+              }
+            >
+              <span className="dash__nav-icon">{item.icon}</span>
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="dash__support">
+          <p className="dash__support-title">Need help?</p>
+          <Link to="/login" className="dash__support-link" onClick={closeMenu}>
+            Visit Help Center
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M5 12h14M13 6l6 6-6 6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </Link>
+        </div>
+
         <div className="dash__profile">
           <span className="avatar dash__profile-avatar" aria-hidden="true">
             {mockUser.initials}
@@ -229,11 +282,12 @@ export default function DashboardLayout() {
       </aside>
 
       <div className="dash__main">
+        {/* Desktop top bar */}
         <header className="dash__topbar">
           {isOverview && (
             <div className="dash__greeting">
               <strong>Good morning, {mockUser.name.split(' ')[0]}</strong>
-              <span>Here's what's happening at {business.name} today.</span>
+              <span>Here's what's happening at Rite Restaurant today.</span>
             </div>
           )}
 
@@ -277,9 +331,49 @@ export default function DashboardLayout() {
         </header>
 
         <main className="dash__content">
+          {/* Mobile-only subhead: business pill, greeting, date chip */}
+          <div className="dash-mob__subhead">
+            <div className="dash-mob__subhead-row">
+              <BusinessSwitcher compact />
+              <button type="button" className="dash__date-range dash-mob__date" aria-label="Change date range">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <rect x="3" y="4.5" width="18" height="17" rx="3" stroke="currentColor" strokeWidth="1.8" />
+                  <path d="M3 9.5h18M8 2.5v4M16 2.5v4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                </svg>
+                <span>Jul 1 – Jul 31, 2026</span>
+                <svg className="dash__date-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </div>
+            {isOverview && (
+              <div className="dash-mob__greeting">
+                <strong>Good morning, {mockUser.name.split(' ')[0]}</strong>
+                <span>Here's what your customers are telling you</span>
+              </div>
+            )}
+          </div>
+
           <Outlet />
         </main>
       </div>
+
+      {/* Mobile bottom tab bar */}
+      <nav className="dash-mob__tabs" aria-label="Dashboard">
+        {NAV_ITEMS.map((item) => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            end={item.end}
+            className={({ isActive }) =>
+              `dash-mob__tab ${isActive ? 'dash-mob__tab--active' : ''}`
+            }
+          >
+            <span className="dash-mob__tab-icon">{item.icon}</span>
+            <span className="dash-mob__tab-label">{item.label}</span>
+          </NavLink>
+        ))}
+      </nav>
     </div>
   )
 }

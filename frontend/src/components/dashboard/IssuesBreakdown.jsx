@@ -1,12 +1,16 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import './IssuesBreakdown.css'
 
 // Top friction points — labeled progress bars per recurring pain theme.
 // Percentages come from the backend theme clustering in Phase 3; bars are
 // sized from the given `pct` and read as text (never color alone).
+// On mobile only the top 3 show by default, with a "View all" expand.
 export default function IssuesBreakdown({ issues, to = '/dashboard/feedback' }) {
+  const [expanded, setExpanded] = useState(false)
+
   return (
-    <div className="card issues-card">
+    <div className={`card issues-card ${expanded ? 'issues-card--expanded' : ''}`}>
       <div className="issues-card__head">
         <div>
           <h3 className="card-title">Top Friction Points</h3>
@@ -17,7 +21,10 @@ export default function IssuesBreakdown({ issues, to = '/dashboard/feedback' }) 
 
       <ul className="issues-card__list">
         {issues.map((issue, index) => (
-          <li key={issue.label} className="issues-card__item">
+          <li
+            key={issue.label}
+            className={`issues-card__item ${index > 2 ? 'issues-card__item--extra' : ''}`}
+          >
             <div className="issues-card__row">
               <span className="issues-card__label">
                 {index === 0 && <span className="issues-card__rank" aria-hidden="true">1</span>}
@@ -43,6 +50,28 @@ export default function IssuesBreakdown({ issues, to = '/dashboard/feedback' }) 
       </ul>
 
       <div className="issues-card__foot">
+        <button
+          type="button"
+          className="issues-card__expand"
+          aria-expanded={expanded}
+          onClick={() => setExpanded((prev) => !prev)}
+        >
+          {expanded ? 'Show less' : 'View all'}
+          <svg
+            className={`issues-card__expand-chevron ${expanded ? 'issues-card__expand-chevron--open' : ''}`}
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M6 9l6 6 6-6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
         <Link to={to} className="issues-card__more">
           View all Issues
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">

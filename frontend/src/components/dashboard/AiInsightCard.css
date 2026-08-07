@@ -46,3 +46,48 @@
   color: var(--color-primary-deep);
   font-weight: 700;
 }
+
+.ai-card__more {
+  display: none;
+  align-items: center;
+  gap: var(--space-1);
+  align-self: flex-start;
+  margin-top: var(--space-1);
+  padding: var(--space-2) var(--space-4);
+  border: 1.5px solid var(--color-primary-light);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-primary-faint);
+  color: var(--color-primary-dark);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  transition: background-color var(--motion-fast) ease, color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease;
+}
+
+.ai-card__more:hover {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+.ai-card__more svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  transition: transform var(--motion-fast) ease;
+}
+
+.ai-card__more-chevron--open {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 720px) {
+  .ai-card__summary--clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .ai-card__more {
+    display: inline-flex;
+  }
+}

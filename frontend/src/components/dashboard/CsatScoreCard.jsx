@@ -18,6 +18,18 @@ export default function CsatScoreCard({ csat }) {
   const maxCount = Math.max(...csat.distribution, 1)
   const starFillPct = (csat.score / csat.outOf) * 100
 
+  const spark = csat.spark ?? csat.distribution
+  const sparkMin = Math.min(...spark)
+  const sparkMax = Math.max(...spark)
+  const sparkSpan = sparkMax - sparkMin || 1
+  const sparkPoints = spark
+    .map((point, index) => {
+      const x = (index / (spark.length - 1)) * 100
+      const y = 26 - ((point - sparkMin) / sparkSpan) * 22
+      return `${x.toFixed(1)},${y.toFixed(1)}`
+    })
+    .join(' ')
+
   return (
     <div className="csat-card">
       <div className="csat-card__head">
@@ -58,6 +70,23 @@ export default function CsatScoreCard({ csat }) {
             {csat.delta}
           </span>
         </div>
+
+        <svg
+          className="csat-card__spark"
+          viewBox="0 0 100 28"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <polygon points={`${sparkPoints} 100,28 0,28`} fill="rgba(255,255,255,0.18)" />
+          <polyline
+            points={sparkPoints}
+            fill="none"
+            stroke="#ffffff"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
 
         <div className="csat-card__bars" aria-hidden="true">
           {csat.distribution.map((count, index) => (
