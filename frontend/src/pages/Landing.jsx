@@ -52,9 +52,9 @@ const TESTIMONIALS = [
   {
     quote:
       'We found out about our wait-time problem within a week. Fixing it directly raised our rating from 4.1 to 4.6 stars.',
-    author: 'Maria Lopez',
-    role: 'Owner, Casa Verde Bistro',
-    initials: 'ML',
+    author: 'Sarah Johnson',
+    role: 'Owner, Rite Restaurant',
+    initials: 'SJ',
   },
   {
     quote:
@@ -72,7 +72,7 @@ const TESTIMONIALS = [
   },
 ]
 
-const TRUSTED_BY = ['Casa Verde', 'FitZone', 'Bloom Salon', 'Kawa Café', 'Northline Clinic']
+const TRUSTED_BY = ['Rite Restaurant', 'FitZone', 'Bloom Salon', 'Kawa Café', 'Northline Clinic']
 
 export default function Landing() {
   return (
@@ -129,9 +129,9 @@ export default function Landing() {
               <div className="landing__mock-card">
                 <div className="landing__mock-top">
                   <div className="landing__mock-business">
-                    <span className="landing__mock-avatar">CV</span>
+                    <span className="landing__mock-avatar">RR</span>
                     <div>
-                      <strong>Casa Verde Bistro</strong>
+                      <strong>Rite Restaurant</strong>
                       <span>Live dashboard</span>
                     </div>
                   </div>

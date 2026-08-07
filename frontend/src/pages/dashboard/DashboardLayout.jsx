@@ -1,5 +1,7 @@
-import { NavLink, Outlet, Link } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { NavLink, Outlet, Link, useLocation } from 'react-router-dom'
 import Logo from '../../components/Logo.jsx'
+import { mockBusinesses, mockUser } from '../../data/mockData.js'
 import './DashboardLayout.css'
 
 const NAV_ITEMS = [
@@ -34,7 +36,7 @@ const NAV_ITEMS = [
   },
   {
     to: '/dashboard/ai-insight',
-    label: 'AI Insight',
+    label: 'AI Insights',
     end: false,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -68,9 +70,28 @@ const NAV_ITEMS = [
   },
 ]
 
-// Dashboard shell: sidebar nav + top bar + routed content area.
-// The mock business ("Casa Verde Bistro") is used for the demo per PRD §10.
+const SIDEBAR_NAV = NAV_ITEMS
+
+// Dashboard shell: business switcher + nav + support/profile cards in the
+// sidebar; greeting + date range + "+ New Survey" CTA in the top bar.
 export default function DashboardLayout() {
+  const [businessOpen, setBusinessOpen] = useState(false)
+  const [business, setBusiness] = useState(mockBusinesses[0])
+  const switcherRef = useRef(null)
+  const location = useLocation()
+
+  useEffect(() => {
+    function onClickOutside(event) {
+      if (switcherRef.current && !switcherRef.current.contains(event.target)) {
+        setBusinessOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', onClickOutside)
+    return () => document.removeEventListener('mousedown', onClickOutside)
+  }, [])
+
+  const isOverview = location.pathname === '/dashboard'
+
   return (
     <div className="dash">
       <aside className="dash__sidebar">
@@ -80,19 +101,79 @@ export default function DashboardLayout() {
           </Link>
         </div>
 
-        <div className="dash__business">
-          <span className="dash__business-avatar" aria-hidden="true">
-            CV
-          </span>
-          <div className="dash__business-meta">
-            <strong>Casa Verde Bistro</strong>
-            <span>Demo business</span>
-          </div>
+        {/* Business switcher */}
+        <div className="dash__switcher" ref={switcherRef}>
+          <button
+            type="button"
+            className="dash__switcher-btn"
+            aria-haspopup="listbox"
+            aria-expanded={businessOpen}
+            onClick={() => setBusinessOpen((open) => !open)}
+          >
+            <span className="dash__business-avatar" aria-hidden="true">
+              {business.initials}
+            </span>
+            <span className="dash__business-meta">
+              <strong>{business.name}</strong>
+              <span>{business.plan}</span>
+            </span>
+            <svg
+              className={`dash__switcher-chevron ${businessOpen ? 'dash__switcher-chevron--open' : ''}`}
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M6 9l6 6 6-6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+
+          {businessOpen && (
+            <ul className="dash__switcher-menu" role="listbox" aria-label="Switch business">
+              {mockBusinesses.map((item) => (
+                <li key={item.id} role="option" aria-selected={item.id === business.id}>
+                  <button
+                    type="button"
+                    className={`dash__switcher-option ${item.id === business.id ? 'dash__switcher-option--active' : ''}`}
+                    onClick={() => {
+                      setBusiness(item)
+                      setBusinessOpen(false)
+                    }}
+                  >
+                    <span className="dash__business-avatar dash__business-avatar--sm" aria-hidden="true">
+                      {item.initials}
+                    </span>
+                    <span className="dash__business-meta">
+                      <strong>{item.name}</strong>
+                      <span>{item.plan}</span>
+                    </span>
+                    {item.id === business.id && (
+                      <svg className="dash__switcher-check" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path
+                          d="M20 6L9 17l-5-5"
+                          stroke="currentColor"
+                          strokeWidth="2.4"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
+        {/* Nav */}
         <nav className="dash__nav" aria-label="Dashboard">
           <p className="dash__nav-label">Menu</p>
-          {NAV_ITEMS.map((item) => (
+          {SIDEBAR_NAV.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
@@ -107,13 +188,31 @@ export default function DashboardLayout() {
           ))}
         </nav>
 
-        <div className="dash__sidebar-foot">
-          <span className="avatar dash__user-avatar" aria-hidden="true">
-            ML
+        {/* Support card */}
+        <div className="dash__support">
+          <p className="dash__support-title">Need help?</p>
+          <Link to="/login" className="dash__support-link">
+            Visit Help Center
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M5 12h14M13 6l6 6-6 6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </Link>
+        </div>
+
+        {/* Profile card */}
+        <div className="dash__profile">
+          <span className="avatar dash__profile-avatar" aria-hidden="true">
+            {mockUser.initials}
           </span>
-          <div className="dash__user">
-            <strong>Maria Lopez</strong>
-            <span>Owner · Demo</span>
+          <div className="dash__profile-meta">
+            <strong>{mockUser.name}</strong>
+            <span>{mockUser.role}</span>
           </div>
           <Link to="/login" className="dash__logout" title="Log out" aria-label="Log out">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -131,19 +230,25 @@ export default function DashboardLayout() {
 
       <div className="dash__main">
         <header className="dash__topbar">
-          <Link to="/feedback" className="btn btn-primary btn-sm">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path
-                d="M12 5v14M5 12h14"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
-            Share feedback link
-          </Link>
+          {isOverview && (
+            <div className="dash__greeting">
+              <strong>Good morning, {mockUser.name.split(' ')[0]}</strong>
+              <span>Here's what's happening at {business.name} today.</span>
+            </div>
+          )}
+
           <div className="dash__topbar-right">
-            <span className="dash__plan-chip">Demo plan</span>
+            <button type="button" className="dash__date-range" aria-label="Change date range">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="3" y="4.5" width="18" height="17" rx="3" stroke="currentColor" strokeWidth="1.8" />
+                <path d="M3 9.5h18M8 2.5v4M16 2.5v4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+              </svg>
+              <span>Jul 1 – Jul 31, 2026</span>
+              <svg className="dash__date-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+
             <button type="button" className="dash__icon-btn" aria-label="Notifications">
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path
@@ -154,10 +259,20 @@ export default function DashboardLayout() {
                   strokeLinejoin="round"
                 />
               </svg>
+              <span className="dash__notif-dot" aria-hidden="true" />
             </button>
-            <span className="avatar dash__topbar-avatar" aria-hidden="true">
-              ML
-            </span>
+
+            <Link to="/feedback" className="btn btn-primary btn-sm">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="M12 5v14M5 12h14"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+              + New Survey
+            </Link>
           </div>
         </header>
 

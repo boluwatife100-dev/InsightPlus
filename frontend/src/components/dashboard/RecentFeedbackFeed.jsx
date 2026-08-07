@@ -1,15 +1,16 @@
+import { Link } from 'react-router-dom'
 import StarRating from '../StarRating.jsx'
 import SentimentBadge from '../SentimentBadge.jsx'
 import './RecentFeedbackFeed.css'
 
 // Recent feedback feed — latest submissions with star rating + comment (PRD §5.5).
 // Items are fed by the realtime backend subscription in Phase 3.
-export default function RecentFeedbackFeed({ items }) {
+export default function RecentFeedbackFeed({ items, to = '/dashboard/feedback' }) {
   return (
     <div className="card feed-card">
       <div className="feed-card__head">
         <div>
-          <h3 className="card-title">Recent feedback</h3>
+          <h3 className="card-title">Recent Feedback</h3>
           <p className="card-subtitle">Latest submissions, auto-tagged</p>
         </div>
         <span className="feed-card__count">{items.length} new</span>
@@ -38,6 +39,21 @@ export default function RecentFeedbackFeed({ items }) {
           </li>
         ))}
       </ul>
+
+      <div className="feed-card__foot">
+        <Link to={to} className="feed-card__more">
+          View all Feedbacks
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M5 12h14M13 6l6 6-6 6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </Link>
+      </div>
     </div>
   )
 }

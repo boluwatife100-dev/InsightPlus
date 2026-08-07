@@ -9,7 +9,7 @@ import './Login.css'
 const DEMO_ACCOUNT = {
   email: 'demo@insightplus.app',
   password: 'demo1234',
-  business: 'Casa Verde Bistro',
+  business: 'Rite Restaurant',
 }
 
 export default function Login() {
@@ -46,7 +46,7 @@ export default function Login() {
             “We found out about our wait-time problem within a week. Fixing it directly raised our
             4.1 to 4.6 stars.”
           </blockquote>
-          <p className="auth__quote-author">Maria Lopez — Owner, Casa Verde Bistro</p>
+          <p className="auth__quote-author">Sarah Johnson — Owner, Rite Restaurant</p>
 
           <dl className="auth__side-stats">
             <div>
@@ -107,7 +107,7 @@ export default function Login() {
                   id="business"
                   className="input"
                   type="text"
-                  placeholder="e.g. Casa Verde Bistro"
+                  placeholder="e.g. Rite Restaurant"
                   value={businessName}
                   onChange={(e) => setBusinessName(e.target.value)}
                   required

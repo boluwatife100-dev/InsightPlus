@@ -1,20 +1,18 @@
+import { Link } from 'react-router-dom'
 import './IssuesBreakdown.css'
 
-// Customer issues breakdown — labeled progress bars per recurring theme
-// (PRD §5.5, §8: "progress bars for issue breakdowns"). Counts are shown as
-// text (never color alone), and bars animate via CSS transitions.
-// Issue labels/counts come from the backend theme clustering in Phase 3.
-export default function IssuesBreakdown({ issues }) {
-  const max = Math.max(...issues.map((issue) => issue.count), 1)
-
+// Top friction points — labeled progress bars per recurring pain theme.
+// Percentages come from the backend theme clustering in Phase 3; bars are
+// sized from the given `pct` and read as text (never color alone).
+export default function IssuesBreakdown({ issues, to = '/dashboard/feedback' }) {
   return (
     <div className="card issues-card">
       <div className="issues-card__head">
         <div>
-          <h3 className="card-title">Customer issues breakdown</h3>
+          <h3 className="card-title">Top Friction Points</h3>
           <p className="card-subtitle">Share of responses mentioning each theme</p>
         </div>
-        <span className="issues-card__total">{issues.reduce((sum, i) => sum + i.count, 0)} mentions</span>
+        <span className="issues-card__total">Top 5</span>
       </div>
 
       <ul className="issues-card__list">
@@ -25,26 +23,39 @@ export default function IssuesBreakdown({ issues }) {
                 {index === 0 && <span className="issues-card__rank" aria-hidden="true">1</span>}
                 {issue.label}
               </span>
-              <span className="issues-card__count">
-                {issue.count} · {Math.round((issue.count / max) * 100)}%
-              </span>
+              <span className="issues-card__count">{issue.pct}%</span>
             </div>
             <div
               className="issues-card__track"
               role="progressbar"
-              aria-valuenow={issue.count}
+              aria-valuenow={issue.pct}
               aria-valuemin={0}
-              aria-valuemax={max}
-              aria-label={`${issue.label}: ${issue.count} mentions`}
+              aria-valuemax={100}
+              aria-label={`${issue.label}: ${issue.pct}% of responses`}
             >
               <span
                 className={`issues-card__fill ${index === 0 ? 'issues-card__fill--top' : ''}`}
-                style={{ width: `${(issue.count / max) * 100}%` }}
+                style={{ width: `${issue.pct}%` }}
               />
             </div>
           </li>
         ))}
       </ul>
+
+      <div className="issues-card__foot">
+        <Link to={to} className="issues-card__more">
+          View all Issues
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M5 12h14M13 6l6 6-6 6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </Link>
+      </div>
     </div>
   )
 }

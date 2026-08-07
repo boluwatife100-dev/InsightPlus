@@ -1,3 +1,9 @@
+.feed-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
 .feed-card__head {
   display: flex;
   align-items: flex-start;
@@ -108,4 +114,28 @@
   padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-pill);
   background-color: var(--color-lavender);
+}
+
+.feed-card__foot {
+  margin-top: auto;
+  padding-top: var(--space-4);
+}
+
+.feed-card__more {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  transition: color var(--motion-fast) ease;
+}
+
+.feed-card__more:hover {
+  color: var(--color-primary-deep);
+}
+
+.feed-card__more svg {
+  width: 1rem;
+  height: 1rem;
 }

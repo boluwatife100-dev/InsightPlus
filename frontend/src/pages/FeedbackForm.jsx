@@ -40,9 +40,9 @@ export default function FeedbackForm() {
           </Link>
           <div className="feedback__business">
             <span className="feedback__business-avatar" aria-hidden="true">
-              CV
+              RR
             </span>
-            <strong>Casa Verde Bistro</strong>
+            <strong>Rite Restaurant</strong>
           </div>
         </div>
       </header>

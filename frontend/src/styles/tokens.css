@@ -101,4 +101,14 @@
   --sidebar-width: 16.5rem;
   --topbar-height: 4.25rem;
   --content-max: 78rem;
+
+  /* ---- Brand gradient & glow (premium hero surfaces) ---- */
+  --gradient-brand: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 45%, #5b21b6 80%, #4c1d95 100%);
+  --gradient-brand-soft: linear-gradient(135deg, #ede9fe 0%, #f5f3ff 100%);
+  --shadow-brand: 0 16px 40px rgba(124, 58, 237, 0.35);
+  --shadow-brand-lg: 0 24px 64px rgba(91, 33, 182, 0.45);
+
+  /* ---- Accent for stars & highlights on dark surfaces ---- */
+  --color-amber-bright: #fbbf24;
+  --color-amber-soft: #fde68a;
 }

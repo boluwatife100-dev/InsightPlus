@@ -1,9 +1,21 @@
 import './AiInsightCard.css'
 
 // AI-generated summary of what customers are saying (PRD §5.5).
-// The summary text is produced by the backend tagging pipeline in Phase 3;
-// currently rendered from demo data.
-export default function AiInsightCard({ summary }) {
+// Key phrases passed in `highlights` are rendered bold for scanning.
+export default function AiInsightCard({ summary, highlights = [] }) {
+  let nodes = [summary]
+  for (const phrase of highlights) {
+    nodes = nodes.flatMap((node) =>
+      typeof node !== 'string'
+        ? [node]
+        : node
+            .split(phrase)
+            .flatMap((part, index, parts) =>
+              index < parts.length - 1 ? [part, <strong key={`${phrase}-${index}`}>{phrase}</strong>] : [part],
+            ),
+    )
+  }
+
   return (
     <div className="card ai-card">
       <div className="ai-card__head">
@@ -19,9 +31,12 @@ export default function AiInsightCard({ summary }) {
             />
           </svg>
         </span>
-        <h3 className="card-title">AI Insight</h3>
+        <div>
+          <h3 className="card-title">AI Summary</h3>
+          <p className="card-subtitle">What customers are saying this month</p>
+        </div>
       </div>
-      <p className="ai-card__summary">{summary}</p>
+      <p className="ai-card__summary">{nodes}</p>
     </div>
   )
 }

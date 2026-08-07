@@ -4,8 +4,8 @@ import './Settings.css'
 // Settings page — business profile shell (UI only for the MVP demo).
 // Out of scope for the hackathon: real auth, multi-business, billing (PRD §10).
 export default function Settings() {
-  const [businessName, setBusinessName] = useState('Casa Verde Bistro')
-  const [email, setEmail] = useState('maria@casaverde.example')
+  const [businessName, setBusinessName] = useState('Rite Restaurant')
+  const [email, setEmail] = useState('sarah@riterestaurant.example')
   const [saved, setSaved] = useState(false)
 
   const handleSubmit = (event) => {

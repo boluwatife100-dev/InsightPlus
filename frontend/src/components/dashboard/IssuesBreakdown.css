@@ -1,3 +1,9 @@
+.issues-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
 .issues-card__head {
   display: flex;
   align-items: flex-start;
@@ -48,7 +54,7 @@
   width: 1.4rem;
   height: 1.4rem;
   border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-deep));
+  background: var(--gradient-brand);
   color: #fff;
   font-size: 0.7rem;
   font-weight: 800;
@@ -56,8 +62,8 @@
 
 .issues-card__count {
   font-size: var(--text-xs);
-  font-weight: 600;
-  color: var(--color-text-muted);
+  font-weight: 700;
+  color: var(--color-text);
   font-variant-numeric: tabular-nums;
 }
 
@@ -78,4 +84,28 @@
 
 .issues-card__fill--top {
   background: linear-gradient(90deg, var(--color-primary), var(--color-primary-deep));
+}
+
+.issues-card__foot {
+  margin-top: auto;
+  padding-top: var(--space-4);
+}
+
+.issues-card__more {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  transition: color var(--motion-fast) ease;
+}
+
+.issues-card__more:hover {
+  color: var(--color-primary-deep);
+}
+
+.issues-card__more svg {
+  width: 1rem;
+  height: 1rem;
 }
