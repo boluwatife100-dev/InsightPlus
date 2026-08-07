@@ -5,29 +5,29 @@ Use this file as the working checklist. Complete phases in order — do not star
 ---
 
 ## Phase 0 — Setup
-- [ ] Clone the repository
-- [ ] Create a `/frontend` folder at the repo root for all frontend code
-- [ ] Initialize a React (Vite) project inside `/frontend`
-- [ ] Create and switch to a dedicated branch (e.g. `frontend-dev`) — never work on `main`
-- [ ] Install dependencies: `recharts` (or `chart.js`), `react-router-dom`
-- [ ] Pull design tokens (colors, fonts, spacing) from the Figma "SHF Project" file and document them in `/frontend/src/styles/tokens.css` or equivalent
+- [x] Clone the repository
+- [x] Create a `/frontend` folder at the repo root for all frontend code
+- [x] Initialize a React (Vite) project inside `/frontend`
+- [x] Create and switch to a dedicated branch (e.g. `frontend-dev`) — never work on `main`
+- [x] Install dependencies: `recharts` (or `chart.js`), `react-router-dom`
+- [x] Pull design tokens (colors, fonts, spacing) from the Figma "SHF Project" file and document them in `/frontend/src/styles/tokens.css` or equivalent
 
 ## Phase 1 — Static Screens (no live data yet)
-- [ ] Landing page: hero section, "how it works" 3-step section, testimonials, trusted-by logos
-- [ ] Login / Signup page (UI shell — functional auth is optional for MVP)
-- [ ] Feedback submission form (public route, no login required)
-- [ ] Confirmation screen ("Thanks for your feedback!")
-- [ ] Dashboard layout shell: sidebar nav (Overview, Feedback, AI Insight, Settings) + empty widget placeholders
+- [x] Landing page: hero section, "how it works" 3-step section, testimonials, trusted-by logos
+- [x] Login / Signup page (UI shell — functional auth is optional for MVP)
+- [x] Feedback submission form (public route, no login required)
+- [x] Confirmation screen ("Thanks for your feedback!")
+- [x] Dashboard layout shell: sidebar nav (Overview, Feedback, AI Insight, Settings) + empty widget placeholders
 
 ## Phase 2 — Dashboard Components
-- [ ] Overall satisfaction score card + bar chart
-- [ ] New feedback count card
-- [ ] AI insight summary card
-- [ ] Recommended action card
-- [ ] Customer issues breakdown (labeled progress bars)
-- [ ] Recent feedback feed (star rating + comment list)
-- [ ] Live sentiment gauge component
-- [ ] "Top issue this week" callout card
+- [x] Overall satisfaction score card + bar chart
+- [x] New feedback count card
+- [x] AI insight summary card
+- [x] Recommended action card
+- [x] Customer issues breakdown (labeled progress bars)
+- [x] Recent feedback feed (star rating + comment list)
+- [x] Live sentiment gauge component
+- [x] "Top issue this week" callout card
 
 ## Phase 3 — Backend Integration
 - [ ] Confirm API contract / data schema with backend developer before wiring anything
