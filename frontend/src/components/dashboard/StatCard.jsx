@@ -1,14 +1,29 @@
 import './StatCard.css'
 
-// Reusable stat card for dashboard KPI tiles (e.g. new feedback count).
-// Renders a headline value, an optional delta label, and an icon chip.
-export default function StatCard({ label, value, delta, icon }) {
+// Reusable KPI stat card (data-dense dashboard style).
+// Renders a headline value, optional delta chip, and icon.
+export default function StatCard({ label, value, delta, icon, tone = 'default' }) {
   return (
-    <div className="card stat-card">
-      {icon && <span className="stat-card__icon">{icon}</span>}
+    <div className={`card stat-card stat-card--${tone}`}>
+      <div className="stat-card__top">
+        <span className="stat-card__icon">{icon}</span>
+        {delta && (
+          <span className="stat-card__delta">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M7 17L17 7M17 7H8M17 7v9"
+                stroke="currentColor"
+                strokeWidth="2.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            {delta}
+          </span>
+        )}
+      </div>
       <span className="stat-card__label">{label}</span>
       <strong className="stat-card__value">{value}</strong>
-      {delta && <span className="stat-card__delta">{delta}</span>}
     </div>
   )
 }

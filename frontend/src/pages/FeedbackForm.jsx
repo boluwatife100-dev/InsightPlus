@@ -6,6 +6,17 @@ import './FeedbackForm.css'
 
 const CATEGORIES = ['Food', 'Service', 'Pricing', 'Cleanliness', 'Ambience', 'Other']
 
+const RATING_LABELS = {
+  0: 'Tap a star to rate',
+  1: 'Terrible',
+  2: 'Poor',
+  3: 'Okay',
+  4: 'Good',
+  5: 'Amazing!',
+}
+
+const COMMENT_MAX = 500
+
 // Public feedback form — no login required (PRD §5.1).
 // Phase 3: POST the submitted data to the agreed backend API contract;
 // until then it navigates to the confirmation screen with local state.
@@ -27,26 +38,32 @@ export default function FeedbackForm() {
           <Link to="/" aria-label="InsightPlus home">
             <Logo compact />
           </Link>
-          <span className="feedback__business">Casa Verde Bistro</span>
+          <div className="feedback__business">
+            <span className="feedback__business-avatar" aria-hidden="true">
+              CV
+            </span>
+            <strong>Casa Verde Bistro</strong>
+          </div>
         </div>
       </header>
 
       <main className="feedback__main">
         <div className="feedback__card card">
-          <h1 className="feedback__title">How was your visit?</h1>
-          <p className="feedback__subtitle">
-            Your feedback helps us serve you better. It takes less than a minute.
-          </p>
+          <div className="feedback__card-head">
+            <span className="feedback__eyebrow">Quick feedback · under 1 min</span>
+            <h1 className="feedback__title">How was your visit?</h1>
+            <p className="feedback__subtitle">
+              Your feedback goes straight to the team — and straight into what they improve next.
+            </p>
+          </div>
 
           <form onSubmit={handleSubmit} noValidate>
             <div className="field">
               <span className="field-label">Your rating</span>
               <StarRating value={rating} onChange={setRating} size="lg" />
-              {rating > 0 && (
-                <span className="feedback__rating-label" aria-hidden="true">
-                  {rating} / 5
-                </span>
-              )}
+              <span className="feedback__rating-label" aria-live="polite">
+                {RATING_LABELS[rating]}
+              </span>
             </div>
 
             <div className="field">
@@ -72,16 +89,21 @@ export default function FeedbackForm() {
             </div>
 
             <div className="field">
-              <label className="field-label" htmlFor="comment">
-                Anything else you want to share?
-              </label>
+              <div className="feedback__comment-head">
+                <label className="field-label" htmlFor="comment">
+                  Anything else you want to share?
+                </label>
+                <span className="feedback__counter" aria-live="polite">
+                  {comment.length}/{COMMENT_MAX}
+                </span>
+              </div>
               <textarea
                 id="comment"
                 className="textarea"
                 placeholder="Tell us what worked — and what didn’t…"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                maxLength={500}
+                maxLength={COMMENT_MAX}
               />
             </div>
 
@@ -94,7 +116,13 @@ export default function FeedbackForm() {
             </button>
           </form>
 
-          <p className="feedback__privacy">100% anonymous · No login required</p>
+          <p className="feedback__privacy">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" strokeWidth="1.8" />
+              <path d="M8 11V8a4 4 0 1 1 8 0v3" stroke="currentColor" strokeWidth="1.8" />
+            </svg>
+            100% anonymous · No login required
+          </p>
         </div>
       </main>
     </div>

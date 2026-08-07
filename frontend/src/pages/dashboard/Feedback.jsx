@@ -1,11 +1,38 @@
+import { useDeferredValue, useMemo, useState } from 'react'
 import StarRating from '../../components/StarRating.jsx'
 import SentimentBadge from '../../components/SentimentBadge.jsx'
 import { mockFeedback } from '../../data/mockData.js'
 import './FeedbackPage.css'
 
+const SENTIMENT_FILTERS = [
+  { value: 'all', label: 'All' },
+  { value: 'positive', label: 'Positive' },
+  { value: 'neutral', label: 'Neutral' },
+  { value: 'negative', label: 'Negative' },
+]
+
+const CATEGORY_FILTERS = ['All', 'Food', 'Service', 'Pricing', 'Cleanliness', 'Ambience']
+
 // Feedback page — full list view of all submissions with auto-tags
-// (sentiment + theme). Phase 3: live data from the backend.
+// (sentiment + theme). Search is deferred (skill §react: useDeferredValue
+// for search inputs) and filters apply instantly. Phase 3: live data.
 export default function Feedback() {
+  const [query, setQuery] = useState('')
+  const [sentiment, setSentiment] = useState('all')
+  const [category, setCategory] = useState('All')
+  const deferredQuery = useDeferredValue(query)
+
+  const filtered = useMemo(() => {
+    const q = deferredQuery.trim().toLowerCase()
+    return mockFeedback.filter((item) => {
+      const matchesQuery =
+        q === '' || item.comment.toLowerCase().includes(q) || item.category.toLowerCase().includes(q)
+      const matchesSentiment = sentiment === 'all' || item.sentiment === sentiment
+      const matchesCategory = category === 'All' || item.category === category
+      return matchesQuery && matchesSentiment && matchesCategory
+    })
+  }, [deferredQuery, sentiment, category])
+
   return (
     <div>
       <header className="dash__page-head">
@@ -15,22 +42,88 @@ export default function Feedback() {
         </p>
       </header>
 
-      <div className="card">
-        <ul className="feedback-page__list">
-          {mockFeedback.map((item) => (
-            <li key={item.id} className="feedback-page__item">
-              <div className="feedback-page__head">
-                <StarRating value={item.rating} readOnly size="sm" />
-                <span className="feedback-page__time">{item.createdAt}</span>
-              </div>
-              <p className="feedback-page__comment">{item.comment}</p>
-              <div className="feedback-page__meta">
-                <SentimentBadge sentiment={item.sentiment} />
-                <span className="feedback-page__category">{item.category}</span>
-              </div>
-            </li>
+      {/* Filter toolbar */}
+      <div className="feedback-page__toolbar">
+        <div className="feedback-page__search">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+            <path d="M21 21l-4.35-4.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+          <input
+            className="input feedback-page__search-input"
+            type="search"
+            placeholder="Search comments or categories…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Search feedback"
+          />
+        </div>
+
+        <div className="feedback-page__filters" role="group" aria-label="Filter by sentiment">
+          {SENTIMENT_FILTERS.map((f) => (
+            <button
+              key={f.value}
+              type="button"
+              className={`chip ${sentiment === f.value ? 'chip--active' : ''}`}
+              onClick={() => setSentiment(f.value)}
+            >
+              {f.label}
+            </button>
           ))}
-        </ul>
+        </div>
+
+        <div className="feedback-page__filters" role="group" aria-label="Filter by category">
+          {CATEGORY_FILTERS.map((c) => (
+            <button
+              key={c}
+              type="button"
+              className={`chip ${category === c ? 'chip--active' : ''}`}
+              onClick={() => setCategory(c)}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+
+        <span className="feedback-page__count" aria-live="polite">
+          {filtered.length} of {mockFeedback.length} responses
+        </span>
+      </div>
+
+      {/* Results */}
+      <div className="card">
+        {filtered.length === 0 ? (
+          <div className="feedback-page__empty">
+            <p>No responses match your filters.</p>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              onClick={() => {
+                setQuery('')
+                setSentiment('all')
+                setCategory('All')
+              }}
+            >
+              Clear filters
+            </button>
+          </div>
+        ) : (
+          <ul className="feedback-page__list">
+            {filtered.map((item) => (
+              <li key={item.id} className="feedback-page__item">
+                <div className="feedback-page__head">
+                  <StarRating value={item.rating} readOnly size="sm" />
+                  <span className="feedback-page__time">{item.createdAt}</span>
+                </div>
+                <p className="feedback-page__comment">{item.comment}</p>
+                <div className="feedback-page__meta">
+                  <SentimentBadge sentiment={item.sentiment} />
+                  <span className="feedback-page__category">{item.category}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   )

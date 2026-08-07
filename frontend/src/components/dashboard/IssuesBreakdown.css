@@ -1,3 +1,20 @@
+.issues-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.issues-card__total {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--color-text-muted);
+  background-color: var(--color-lavender);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
 .issues-card__list {
   list-style: none;
   margin: 0;
@@ -5,6 +22,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  margin-top: var(--space-4);
 }
 
 .issues-card__row {
@@ -12,21 +30,39 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: var(--space-2);
+  gap: var(--space-3);
 }
 
 .issues-card__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   font-weight: 600;
   font-size: var(--text-sm);
+}
+
+.issues-card__rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-deep));
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
 }
 
 .issues-card__count {
   font-size: var(--text-xs);
   font-weight: 600;
   color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .issues-card__track {
-  height: 0.6rem;
+  height: 0.625rem;
   border-radius: var(--radius-pill);
   background-color: var(--color-lavender);
   overflow: hidden;
@@ -37,5 +73,9 @@
   height: 100%;
   border-radius: var(--radius-pill);
   background: linear-gradient(90deg, var(--color-primary-light), var(--color-primary));
-  transition: width 0.6s ease;
+  transition: width var(--motion-slow) var(--ease-out);
+}
+
+.issues-card__fill--top {
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-deep));
 }

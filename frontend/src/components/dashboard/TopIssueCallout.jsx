@@ -22,6 +22,7 @@ export default function TopIssueCallout({ issue, context }) {
         <strong className="callout__issue">{issue}</strong>
         <span className="callout__context">{context}</span>
       </div>
+      <span className="callout__link">See details →</span>
     </div>
   )
 }
