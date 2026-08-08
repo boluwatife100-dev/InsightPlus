@@ -8,6 +8,46 @@ import './Login.css'
 // Login / signup screen. Submissions hit authService.login() (mocked for
 // the hackathon: demo@insightplus.app / demo1234, real backend via
 // VITE_USE_MOCK=false).
+const SIDE_STATS = [
+  {
+    value: '4.6★',
+    label: 'Avg. rating after fix',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M12 3.2l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.9l-5.6 3.2 1.1-6.2L3 9.8l6.2-.9L12 3.2z"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+  },
+  {
+    value: '84',
+    label: 'Satisfaction score',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M5 20V10M12 20V4M19 20v-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
+    value: '12k+',
+    label: 'Responses tagged',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5 8.5 8.5 0 0 1 11.5 3h.5A8.5 8.5 0 0 1 21 11.5z"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+  },
+]
+
 export default function Login() {
   const [searchParams] = useSearchParams()
   const [mode, setMode] = useState(searchParams.get('mode') === 'signup' ? 'signup' : 'login')
@@ -48,40 +88,57 @@ export default function Login() {
 
   return (
     <div className="auth">
+      <div className="auth__statusbar" aria-hidden="true">
+        <span className="auth__statusbar-time">9:41</span>
+        <span className="auth__statusbar-icons">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 4v3M12 9v2.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+            <rect x="2" y="11" width="2.6" height="9" rx="1" fill="currentColor" />
+            <rect x="6.5" y="8.5" width="2.6" height="11.5" rx="1" fill="currentColor" />
+            <rect x="11" y="6" width="2.6" height="14" rx="1" fill="currentColor" />
+            <rect x="15.5" y="3.5" width="2.6" height="16.5" rx="1" fill="currentColor" />
+          </svg>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M3 13.5A16.5 16.5 0 0 1 21 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <path d="M3 18A11 11 0 0 1 21 16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" opacity="0.7" />
+          </svg>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="8" width="18" height="10" rx="3" stroke="currentColor" strokeWidth="1.8" />
+            <path d="M13 8v10" stroke="currentColor" strokeWidth="1.2" />
+          </svg>
+        </span>
+      </div>
+
       <aside className="auth__side">
+        <div className="auth__side-deco" aria-hidden="true" />
         <div className="auth__side-inner">
           <Link to="/" className="auth__logo-link" aria-label="InsightPlus home">
-            <Logo />
+            <Logo round />
           </Link>
 
-          <blockquote className="auth__quote">
-            “We found out about our wait-time problem within a week. Fixing it directly raised our
-            4.1 to 4.6 stars.”
-          </blockquote>
-          <p className="auth__quote-author">Sarah Johnson — Owner, Rite Restaurant</p>
+          <div className="auth__side-body">
+            <blockquote className="auth__quote">
+              “We found out about our wait-time problem within a week. Fixing it directly raised our
+              4.1 to 4.6 stars.”
+            </blockquote>
+            <p className="auth__quote-author">Sarah Johnson — Owner, Rite Restaurant</p>
 
-          <dl className="auth__side-stats">
-            <div>
-              <dt>4.6★</dt>
-              <dd>Avg. rating after fix</dd>
+            <div className="auth__side-stats">
+              {SIDE_STATS.map((stat) => (
+                <div key={stat.label} className="auth__side-stat">
+                  <span className="auth__side-stat-icon">{stat.icon}</span>
+                  <strong className="auth__side-stat-value">{stat.value}</strong>
+                  <span className="auth__side-stat-label">{stat.label}</span>
+                </div>
+              ))}
             </div>
-            <div>
-              <dt>84</dt>
-              <dd>Satisfaction score</dd>
-            </div>
-            <div>
-              <dt>12k+</dt>
-              <dd>Responses tagged</dd>
-            </div>
-          </dl>
+          </div>
         </div>
       </aside>
 
       <main className="auth__panel">
-        <div className="auth__card card">
-          <h1 className="auth__title">
-            {mode === 'login' ? 'Welcome back' : 'Create your account'}
-          </h1>
+        <div className="auth__card">
+          <h1 className="auth__title">{mode === 'login' ? 'Welcome back' : 'Create your account'}</h1>
           <p className="auth__subtitle">
             {mode === 'login'
               ? 'Log in to see what your customers are saying.'
@@ -117,7 +174,7 @@ export default function Login() {
                 </label>
                 <input
                   id="business"
-                  className="input"
+                  className="input auth__input"
                   type="text"
                   placeholder="e.g. Rite Restaurant"
                   value={businessName}
@@ -133,7 +190,7 @@ export default function Login() {
               </label>
               <input
                 id="email"
-                className="input"
+                className="input auth__input"
                 type="email"
                 placeholder="you@business.com"
                 autoComplete="username"
@@ -149,7 +206,7 @@ export default function Login() {
               </label>
               <input
                 id="password"
-                className="input"
+                className="input auth__input"
                 type="password"
                 placeholder="••••••••"
                 autoComplete="current-password"
@@ -171,14 +228,17 @@ export default function Login() {
             </button>
           </form>
 
+          <div className="auth__divider" aria-hidden="true" />
+
           <div className="auth__demo">
             <p className="auth__demo-title">Explore the demo dashboard</p>
-            <button type="button" className="btn btn-secondary btn-block" onClick={fillDemoAccount}>
+            <button type="button" className="btn btn-outline btn-block" onClick={fillDemoAccount}>
               Use demo account
             </button>
-            <p className="auth__demo-creds">
-              {DEMO_CREDENTIALS.email} · {DEMO_CREDENTIALS.password}
-            </p>
+            <div className="auth__demo-creds">
+              <code>demo@insightplus.app</code>
+              <code>demo1234</code>
+            </div>
           </div>
 
           <p className="auth__demo-note">

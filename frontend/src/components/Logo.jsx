@@ -1,9 +1,12 @@
 import './Logo.css'
 
 // InsightPlus brand mark: violet gradient rounded square + wordmark.
-export default function Logo({ compact = false }) {
+// `round` renders the mark as a circle (used on the marketing site).
+export default function Logo({ compact = false, round = false }) {
   return (
-    <div className={`logo ${compact ? 'logo--compact' : ''}`}>
+    <div
+      className={`logo ${compact ? 'logo--compact' : ''} ${round ? 'logo--round' : ''}`}
+    >
       <span className="logo__mark" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path

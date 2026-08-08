@@ -37,3 +37,7 @@
   height: 2rem;
   border-radius: var(--radius-sm);
 }
+
+.logo--round .logo__mark {
+  border-radius: 50%;
+}

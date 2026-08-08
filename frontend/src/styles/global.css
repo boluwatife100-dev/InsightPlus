@@ -151,6 +151,19 @@ img {
   background-color: var(--color-primary-faint);
 }
 
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary-dark);
+}
+
+.btn-outline:hover {
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-deep));
+  box-shadow: 0 10px 26px rgba(124, 58, 237, 0.34);
+  transform: translateY(-1px);
+}
+
 .btn-lg {
   padding: var(--space-4) var(--space-6);
   font-size: var(--text-lg);
