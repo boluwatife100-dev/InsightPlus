@@ -5,17 +5,16 @@
 // touching any component code.
 //
 //   VITE_API_URL    base URL of the API (must end with "/"), e.g.
-//                   https://api.insightplus.example/v1/
-//   VITE_USE_MOCK   "false" to use the real API; anything else
-//                   (or unset) keeps the bundled demo data.
+//                   http://localhost:5000/api/
+//
+// The frontend now uses the real backend routes by default.
 // See /.env.example
 // ============================================================
 
-const apiUrl = (import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api/v1/').replace(/\/?$/, '/')
+const apiUrl = (import.meta.env.VITE_API_URL ?? 'http://localhost:5000/api/').replace(/\/?$/, '/')
 
 export const config = {
   apiUrl,
-  useMock: import.meta.env.VITE_USE_MOCK !== 'false',
   defaultRange: { from: '2026-07-01', to: '2026-07-31' },
   requestTimeoutMs: 10000,
 }

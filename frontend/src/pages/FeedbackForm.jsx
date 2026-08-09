@@ -19,8 +19,7 @@ const RATING_LABELS = {
 const COMMENT_MAX = 500
 
 // Public feedback form — no login required (PRD §5.1).
-// Submissions POST to feedbackService.submitFeedback() (mocked for now,
-// real backend via VITE_USE_MOCK=false) before showing confirmation.
+// Submissions POST to feedbackService.submitFeedback() on the real backend.
 export default function FeedbackForm() {
   const [rating, setRating] = useState(0)
   const [category, setCategory] = useState('')

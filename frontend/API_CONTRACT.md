@@ -6,8 +6,7 @@ Strict endpoint specification. Implement against this contract exactly.
 
 ## Global rules
 
-- **Base URL env var:** `VITE_API_URL` (default `http://localhost:8000/api/v1/`, must end with `/`)
-- **Mock/live switch:** `VITE_USE_MOCK` — unset/anything ≠ `"false"` = mock data; `"false"` = real API
+- **Base URL env var:** `VITE_API_URL` (default `http://localhost:5000/api/`, must end with `/`)
 - **Auth:** Bearer token, stored client-side as `insightplus_token`, sent as `Authorization: Bearer <token>` on every request; login response token is stored after `POST /auth/login`. CORS must allow credentials (`credentials: 'include'` is sent).
 - **JSON:** every request/response body is `application/json`. Body `null` on 204.
 - **Lists:** all list endpoints return a **bare array** — no pagination or envelope wrapper.
