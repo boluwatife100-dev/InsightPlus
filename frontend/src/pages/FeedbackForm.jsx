@@ -46,7 +46,7 @@ export default function FeedbackForm() {
     <div className="feedback">
       <header className="feedback__nav">
         <div className="container feedback__nav-inner">
-          <Link to="/" aria-label="InsightPlus home">
+          <Link to="/" aria-label="InsightLoop home">
             <Logo compact />
           </Link>
           <div className="feedback__business">

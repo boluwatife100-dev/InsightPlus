@@ -81,7 +81,7 @@ export default function LandingHeader({ menuOpen, onOpenMenu }) {
         <a href="#top" className="inline-flex shrink-0 leading-none">
           <img
             src="/in-logo.png"
-            alt="InsightPlus logo"
+            alt="InsightLoop logo"
             className="h-12 w-fit"
           />
         </a>

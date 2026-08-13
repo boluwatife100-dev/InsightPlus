@@ -35,6 +35,26 @@ export async function login({ email, password }) {
 }
 
 /**
+ * Sign up and store the session token.
+ *
+ * POST /auth/signup
+ * body:    { email: string, password: string, businessName: string }
+ * success: 201 → { token: string, user: User }
+ * failure: 400|409 → { detail: string }
+ *
+ * @param {{ email: string, password: string, businessName: string }} credentials
+ * @returns {Promise<User>}
+ */
+export async function signup({ email, password, businessName }) {
+  const data = await apiFetch(ENDPOINTS.auth.signup, {
+    method: 'POST',
+    body: { email, password, businessName },
+  })
+  setToken(data.token)
+  return data.user
+}
+
+/**
  * Invalidate the session.
  *
  * POST /auth/logout → 204

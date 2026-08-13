@@ -178,7 +178,7 @@ export function PlayIcon({ className }) {
   )
 }
 
-// The InsightPlus mark on white — always drawn on the brand gradient.
+// The InsightLoop mark on white — always drawn on the brand gradient.
 export function BrandMarkIcon({ className }) {
   return (
     <Icon className={className}>

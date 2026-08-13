@@ -1,4 +1,4 @@
-# InsightPlus Frontend
+# InsightLoop Frontend
 
 Customer feedback analytics for restaurants — AI-powered sentiment analysis,
 dashboard overviews, and actionable insights.
@@ -16,7 +16,7 @@ npm run lint      # oxlint
 npm run build     # production build
 ```
 
-Demo login (mock mode): `demo@insightplus.app` / `demo1234`.
+Demo login (mock mode): `demo@InsightLoop.app` / `demo1234`.
 
 ## Backend Integration
 

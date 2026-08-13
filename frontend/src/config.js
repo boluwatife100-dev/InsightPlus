@@ -11,7 +11,7 @@
 // See /.env.example
 // ============================================================
 
-const apiUrl = (import.meta.env.VITE_API_URL ?? 'http://localhost:5000/api/').replace(/\/?$/, '/')
+const apiUrl = (import.meta.env.VITE_API_URL ?? 'http://localhost:5001/api/').replace(/\/?$/, '/')
 
 export const config = {
   apiUrl,
@@ -22,7 +22,7 @@ export const config = {
 // Used by Login for the quick "demo account" fill (PRD §10 — auth is
 // mocked for the hackathon; the real backend provides these instead).
 export const DEMO_CREDENTIALS = {
-  email: 'demo@insightplus.app',
+  email: 'demo@InsightLoop.app',
   password: 'demo1234',
   business: 'Rite Restaurant',
 }

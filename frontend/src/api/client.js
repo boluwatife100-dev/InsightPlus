@@ -8,7 +8,7 @@ import { config } from '../config.js'
 // - normalizes failures into ApiError with the server message
 // ============================================================
 
-const TOKEN_KEY = 'insightplus_token'
+const TOKEN_KEY = 'InsightLoop_token'
 
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY)

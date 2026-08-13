@@ -12,7 +12,7 @@ export default function SnapshotSidebar() {
           <BrandMarkIcon className="h-[0.95rem] w-[0.95rem]" />
         </Avatar>
         <span className="text-sm font-extrabold tracking-[-0.02em] text-[var(--color-text)]">
-          InsightPlus
+          InsightLoop
         </span>
       </div>
 

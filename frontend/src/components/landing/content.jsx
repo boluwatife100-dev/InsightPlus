@@ -43,7 +43,7 @@ export const HERO = {
   titleLead: 'Turn customer feedback into',
   titleAccent: 'better business decisions.',
   subtitle:
-    'InsightPlus uses advanced AI to analyze reviews, surveys, and support tickets in real-time, helping you make data-driven decisions faster.',
+    'InsightLoop uses advanced AI to analyze reviews, surveys, and support tickets in real-time, helping you make data-driven decisions faster.',
 }
 
 // Logo wall. Each glyph is a one-off brand mark, so they are inlined
@@ -106,17 +106,17 @@ export const TRUSTED_BY = [
 
 export const STEPS = [
   {
-    icon: <SurveyIcon />,
+    icon: "/1in.png",
     title: 'Collect customer feedback',
     description: 'Gather feedback from your customers through simple, easy-to-share surveys.',
   },
   {
-    icon: <ClockIcon />,
+    icon: "/2in.png",
     title: 'Understand what they mean',
     description: 'Let AI analyze feedback, identify patterns, and uncover what your customers really think.',
   },
   {
-    icon: <PieChartIcon />,
+    icon: "/3in.png",
     title: 'Turn insights into action',
     description: 'Get clear recommendations that help you make decisions and improve your customer experience.',
   },
@@ -125,30 +125,34 @@ export const STEPS = [
 export const TESTIMONIALS = [
   {
     quote:
-      'We found out about our wait-time problem within a week. Fixing it directly raised our rating from 4.1 to 4.6 — InsightPlus made it obvious.',
-    author: 'Sarah Johnson',
-    role: 'Owner, Rite Restaurant',
+      'Before InsightLoop, we were collecting feedback but barely had time to go through it. Now, I can quickly see what customers love, what they complain about, and what needs our attention. It has made understanding our customers so much easier.',
+    author: 'Sean Williams',
+    role: 'Restaurant Owner',
     initials: 'SJ',
+    image: 'https://i.pravatar.cc/150?u=Sean%Williams',
   },
   {
     quote:
-      'No more reading spreadsheets on Sunday night. InsightPlus tells me what to work on — plain and simple.',
-    author: 'David Okafor',
-    role: 'Manager, FitZone Gym',
+      'The AI insights are honestly my favorite part. Instead of spending hours reading through hundreds of responses, I get a clear summary of what users are saying and the issues that keep coming up. It makes it much easier for our team to decide what to work on next.',
+    author: 'Amara Johnson',
+    role: 'Product Manager',
     initials: 'DO',
+    image: 'https://i.pravatar.cc/150?u=Amara%20Johnson',
   },
   {
     quote:
-      'The AI summary is eerily accurate. It picks up themes we only hear about weeks later in person.',
-    author: 'Priya Sharma',
-    role: 'Owner, Bloom Salon',
+      "InsightLoop showed us that our biggest issue wasn't our products like we initially thought. Customers were actually frustrated with delivery times. That insight helped us focus on the right problem and make changes that genuinely improved the customer experience.",
+    author: 'Daniel Carter',
+    role: 'E Commerce Manager',
     initials: 'PS',
+    image: 'https://i.pravatar.cc/150?u=Daniel%20Carter',
   },
   {
     quote:
-      'We launched surveys on Friday and had a prioritized insight plan by Monday. That speed changed how we operate.',
-    author: 'Lena Novak',
-    role: 'COO, Kawa Café',
+      "We receive feedback from guests every day, but collecting it was never the hard part. The difficult part was making sense of all of it. InsightLoop gives us a clearer picture of how guests feel about their experience and helps us spot recurring issues before they become bigger problems. It has changed the way our team uses customer feedback.",
+    author: 'Jack Michaels',
+    role: 'Hotel Manager',
     initials: 'LN',
+    image: 'https://i.pravatar.cc/150?u=Jack%20Michaels',
   },
 ]

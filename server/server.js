@@ -1,4 +1,5 @@
-require('dotenv').config();
+const path = require('node:path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
@@ -12,8 +13,9 @@ const errorHandler = require('./middleware/errorHandler');
 const seedData = require('./utils/seedData');
 
 const app = express();
+const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 app.use(cors({
-  origin: process.env.CLIENT_URL,
+  origin: CLIENT_URL,
   credentials: true,
 }));
 app.use(express.json());
@@ -33,5 +35,5 @@ app.use('/api/ai-insights', aiInsightsRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));

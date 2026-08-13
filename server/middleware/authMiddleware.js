@@ -10,7 +10,7 @@ const authMiddleware = async (req, res, next) => {
   }
 
   try {
-    const secret = process.env.JWT_SECRET || 'insightplus-secret';
+    const secret = process.env.JWT_SECRET || 'InsightLoop-secret';
     const payload = jwt.verify(token, secret);
     const user = await User.findById(payload.userId).select('-passwordHash');
 

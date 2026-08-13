@@ -1,7 +1,7 @@
-import { useRef, useState } from 'react'
 import SectionHeading from '../SectionHeading.jsx'
 import { TESTIMONIALS } from '../content.jsx'
 import { BRAND_GRADIENT, CONTAINER, EASE_OUT, SECTION_Y } from '../styles.js'
+import { InfiniteMovingCards } from '../../ui/infinite-moving-cards.jsx'
 
 function TestimonialCard({ quote, author, role, initials }) {
   return (
@@ -38,58 +38,21 @@ function TestimonialCard({ quote, author, role, initials }) {
 // track keeps momentum scrolling on touch devices. The dots only mirror
 // the scroll position and scroll the track back when clicked.
 export default function Testimonials() {
-  const trackRef = useRef(null)
-  const [active, setActive] = useState(0)
-
-  const scrollToCard = (index) => {
-    setActive(index)
-    const track = trackRef.current
-    const target = track?.children[index]
-    if (!target) return
-    track.scrollTo({ left: target.offsetLeft - track.offsetLeft, behavior: 'smooth' })
-  }
-
-  const onTrackScroll = () => {
-    const track = trackRef.current
-    if (!track?.children.length) return
-    const card = track.children[0]
-    const index = Math.round(track.scrollLeft / card.offsetWidth)
-    setActive(Math.max(0, Math.min(index, TESTIMONIALS.length - 1)))
-  }
-
   return (
     <section id="testimonials" className={`bg-[var(--color-lavender)] ${SECTION_Y}`}>
       <div className={CONTAINER}>
         <SectionHeading title="What our customers say">
-          See how InsightPlus is helping businesses make sense of customer feedback and make better
+          See how InsightLoop is helping businesses make sense of customer feedback and make better
           decisions.
         </SectionHeading>
 
-        <div className="relative">
-          <div
-            className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none] min-[721px]:gap-6 [&::-webkit-scrollbar]:hidden"
-            ref={trackRef}
-            onScroll={onTrackScroll}
-          >
-            {TESTIMONIALS.map((testimonial) => (
-              <TestimonialCard key={testimonial.author} {...testimonial} />
-            ))}
-          </div>
-
-          <div className="mt-6 flex justify-center gap-2" role="group" aria-label="Choose a testimonial">
-            {TESTIMONIALS.map((testimonial, index) => (
-              <button
-                key={testimonial.author}
-                type="button"
-                className={`h-2 rounded-[var(--radius-pill)] border-0 p-0 transition-all duration-150 ${EASE_OUT} ${
-                  index === active ? 'w-6 bg-[var(--color-primary)]' : 'w-2 bg-[var(--color-lavender-deep)]'
-                }`}
-                aria-label={`Go to testimonial ${index + 1}`}
-                aria-current={index === active}
-                onClick={() => scrollToCard(index)}
-              />
-            ))}
-          </div>
+        <div className="mt-6 w-full mx-auto">
+          <InfiniteMovingCards
+            items={TESTIMONIALS.map((t) => ({ name: t.author, title: t.role, quote: t.quote, image: t.image }))}
+            className=""
+            direction="left"
+            speed="slow"
+          />
         </div>
       </div>
     </section>

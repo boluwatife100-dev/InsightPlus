@@ -6,7 +6,7 @@ import { DEMO_CREDENTIALS } from '../config.js'
 import './Login.css'
 
 // Login / signup screen. Submissions hit authService.login() (mocked for
-// the hackathon: demo@insightplus.app / demo1234, real backend via
+// the hackathon: demo@InsightLoop.app / demo1234, real backend via
 // VITE_USE_MOCK=false).
 const SIDE_STATS = [
   {
@@ -77,7 +77,11 @@ export default function Login() {
     setSubmitting(true)
     setAuthError(null)
     try {
-      await authService.login({ email, password })
+      if (mode === 'signup') {
+        await authService.signup({ email, password, businessName })
+      } else {
+        await authService.login({ email, password })
+      }
       navigate('/dashboard')
     } catch (err) {
       setAuthError(err.message)
@@ -112,8 +116,8 @@ export default function Login() {
       <aside className="auth__side">
         <div className="auth__side-deco" aria-hidden="true" />
         <div className="auth__side-inner">
-          <Link to="/" className="auth__logo-link" aria-label="InsightPlus home">
-            <Logo round />
+          <Link to="/" className="auth__logo-link" aria-label="InsightLoop home">
+            <img src={"/in-logo.png"} alt="InsightLoop logo" className="bg-white rounded-full p-2" />
           </Link>
 
           <div className="auth__side-body">
@@ -223,7 +227,7 @@ export default function Login() {
               </p>
             )}
 
-            <button type="submit" className="btn btn-primary btn-block btn-lg" disabled={submitting}>
+            <button type="submit" className="btn btn-primary rounded-sm btn-block btn-lg" disabled={submitting}>
               {submitting ? 'Signing in…' : mode === 'login' ? 'Log in' : 'Create account'}
             </button>
           </form>
@@ -232,11 +236,11 @@ export default function Login() {
 
           <div className="auth__demo">
             <p className="auth__demo-title">Explore the demo dashboard</p>
-            <button type="button" className="btn btn-outline btn-block" onClick={fillDemoAccount}>
+            <button type="button" className="btn rounded-sm btn-outline btn-block" onClick={fillDemoAccount}>
               Use demo account
             </button>
-            <div className="auth__demo-creds">
-              <code>demo@insightplus.app</code>
+            <div className=" auth__demo-creds">
+              <code>demo@InsightLoop.app</code>
               <code>demo1234</code>
             </div>
           </div>
@@ -248,7 +252,7 @@ export default function Login() {
         </div>
 
         <p className="auth__foot">
-          <Link to="/">← Back to home</Link>
+          <Link to="/">Back to home</Link>
         </p>
       </main>
     </div>

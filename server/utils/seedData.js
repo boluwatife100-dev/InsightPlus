@@ -10,7 +10,7 @@ const seedData = async () => {
 
   const demoUser = new User({
     name: 'Sarah Johnson',
-    email: 'demo@insightplus.app',
+    email: 'demo@InsightLoop.app',
     passwordHash: 'demo1234',
     initials: 'SJ',
     role: 'Owner',

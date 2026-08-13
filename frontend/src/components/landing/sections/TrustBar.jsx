@@ -8,7 +8,7 @@ export default function TrustBar() {
     <section className="border-t border-[var(--color-border)] bg-[var(--color-surface)] py-8 min-[721px]:py-12">
       <div className={CONTAINER}>
         <p className="mb-8 text-center text-xs font-bold tracking-[0.1em] text-[var(--color-text-faint)] uppercase">
-          InsightPlus is trusted by
+          InsightLoop is trusted by
         </p>
 
         <ul

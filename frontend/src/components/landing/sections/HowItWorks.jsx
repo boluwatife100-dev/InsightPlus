@@ -20,10 +20,10 @@ export default function HowItWorks() {
               className={`flex flex-col items-center gap-4 rounded-2xl capitalize bg-[#F6F0FF] px-6 py-10 text-center shadow-sm transition-transform duration-200 tracking-wider ${EASE_OUT} hover:-translate-y-[4px] md:px-8 md:py-12`}
             >
               <span
-                className="mb-3 inline-flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-[0_10px_24px_rgba(124,58,237,0.08)] [&_svg]:h-[2.25rem] [&_svg]:w-[2.25rem]"
+                className="mb-3 inline-flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-[0_10px_24px_rgba(124,58,237,0.08)]"
                 aria-hidden="true"
               >
-                {step.icon}
+                <img src={step.icon} alt={step.title} className="h-20 object-cover w-20" />
               </span>
               <h3 className="text-xl font-semibold tracking-[-0.01em] text-[var(--color-text)]">{step.title}</h3>
               <p className="text-sm leading-[1.7] text-[var(--color-text-muted)] max-w-[22ch]">{step.description}</p>

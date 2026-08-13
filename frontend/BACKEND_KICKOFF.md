@@ -1,4 +1,4 @@
-# InsightPlus Backend — Kickoff Checklist
+# InsightLoop Backend — Kickoff Checklist
 
 For the backend developer. Follow top to bottom.
 

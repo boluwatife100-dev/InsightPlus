@@ -22,7 +22,7 @@ function ChromeBar() {
       </div>
       <span className="inline-flex flex-1 items-center justify-center gap-2 rounded-[var(--radius-pill)] bg-[var(--color-lavender)] px-3 py-1 text-xs font-semibold text-[var(--color-text-muted)]">
         <LockIcon className="h-[0.8rem] w-[0.8rem] text-[var(--color-primary)]" />
-        insightplus.app/dashboard
+        InsightLoop.app/dashboard
       </span>
     </div>
   )

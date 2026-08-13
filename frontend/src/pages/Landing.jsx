@@ -39,7 +39,7 @@ export default function Landing() {
         <Testimonials />
       </main>
 
-      <LandingFooter />
+      {/* <LandingFooter /> */}
     </div>
   )
 }

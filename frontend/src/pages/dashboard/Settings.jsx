@@ -113,7 +113,7 @@ export default function Settings() {
               Share this link — or print the QR code — so customers can reach your feedback form.
             </p>
             <div className="settings__link-row">
-              <code className="settings__link">insightplus.app/f/{business?.id ?? 'your-business'}</code>
+              <code className="settings__link">InsightLoop.app/f/{business?.id ?? 'your-business'}</code>
               <button type="button" className="btn btn-secondary">
                 Copy
               </button>

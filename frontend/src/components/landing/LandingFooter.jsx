@@ -9,7 +9,7 @@ export default function LandingFooter() {
       >
         <Logo round />
         <p className="text-sm text-[var(--color-text-muted)]">
-          © 2026 InsightPlus — Customer feedback analytics for small businesses.
+          © 2026 InsightLoop — Customer feedback analytics for small businesses.
         </p>
       </div>
     </footer>

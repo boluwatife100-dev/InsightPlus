@@ -34,7 +34,7 @@ export default function MobileMenu({ open, onClose }) {
         inert={!open}
       >
         <div className="flex items-center justify-between">
-          <img src="/in-logo.png" alt="InsightPlus" className="h-10 w-fit" />
+          <img src="/in-logo.png" alt="InsightLoop" className="h-10 w-fit" />
           <button type="button" className={ICON_BUTTON} aria-label="Close menu" onClick={onClose}>
             <CloseIcon className="h-[1.35rem] w-[1.35rem]" />
           </button>

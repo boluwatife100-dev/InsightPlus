@@ -1,4 +1,4 @@
-# InsightPlus Frontend — API Contract (Backend Handoff)
+# InsightLoop Frontend — API Contract (Backend Handoff)
 
 Strict endpoint specification. Implement against this contract exactly.
 
@@ -7,7 +7,7 @@ Strict endpoint specification. Implement against this contract exactly.
 ## Global rules
 
 - **Base URL env var:** `VITE_API_URL` (default `http://localhost:5000/api/`, must end with `/`)
-- **Auth:** Bearer token, stored client-side as `insightplus_token`, sent as `Authorization: Bearer <token>` on every request; login response token is stored after `POST /auth/login`. CORS must allow credentials (`credentials: 'include'` is sent).
+- **Auth:** Bearer token, stored client-side as `InsightLoop_token`, sent as `Authorization: Bearer <token>` on every request; login response token is stored after `POST /auth/login`. CORS must allow credentials (`credentials: 'include'` is sent).
 - **JSON:** every request/response body is `application/json`. Body `null` on 204.
 - **Lists:** all list endpoints return a **bare array** — no pagination or envelope wrapper.
 - **Dates:** `createdAt` (and any user-facing date string) is rendered verbatim in the UI. Return display-ready strings (`"2 min ago"`, `"1 day ago"`) — raw ISO timestamps will appear unformatted.

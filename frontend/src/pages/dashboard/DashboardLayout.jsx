@@ -116,7 +116,7 @@ export default function DashboardLayout() {
             />
           </svg>
         </button>
-        <Link to="/" className="dash-mob__logo" aria-label="InsightPlus home">
+        <Link to="/" className="dash-mob__logo" aria-label="InsightLoop home">
           <Logo />
         </Link>
         <button type="button" className="dash-mob__icon-btn" aria-label="Notifications">
@@ -136,7 +136,7 @@ export default function DashboardLayout() {
       {/* Desktop sidebar */}
       <aside className="dash__sidebar">
         <div className="dash__sidebar-head">
-          <Link to="/" aria-label="InsightPlus home">
+          <Link to="/" aria-label="InsightLoop home">
             <Logo />
           </Link>
         </div>
@@ -210,7 +210,7 @@ export default function DashboardLayout() {
         inert={!menuOpen}
       >
         <div className="dash-mob__drawer-head">
-          <Link to="/" aria-label="InsightPlus home" onClick={closeMenu}>
+          <Link to="/" aria-label="InsightLoop home" onClick={closeMenu}>
             <Logo />
           </Link>
           <button
