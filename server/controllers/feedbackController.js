@@ -8,13 +8,20 @@ const inferSentiment = (rating) => {
 
 const createFeedback = async (req, res, next) => {
   try {
-    const { rating, category, comment, author } = req.body;
+    const { rating, category, comment, author, emotion, productRating, serviceRating, teamRating, contactRequested, contactName, contactEmail } = req.body;
     const feedback = await Feedback.create({
-      author: author && author.toString().trim() ? author.toString().trim() : 'Anonymous',
+      author: contactName ? contactName.trim() : (author && author.toString().trim() ? author.toString().trim() : 'Anonymous'),
       comment: comment.toString().trim(),
       rating: Number(rating),
       category: category.toString().trim(),
       sentiment: inferSentiment(Number(rating)),
+      emotion,
+      productRating: productRating ? Number(productRating) : undefined,
+      serviceRating: serviceRating ? Number(serviceRating) : undefined,
+      teamRating: teamRating ? Number(teamRating) : undefined,
+      contactRequested: Boolean(contactRequested),
+      contactName: contactName ? contactName.toString().trim() : undefined,
+      contactEmail: contactEmail ? contactEmail.toString().trim() : undefined,
     });
 
     res.status(201).json({
@@ -24,6 +31,13 @@ const createFeedback = async (req, res, next) => {
       category: feedback.category,
       sentiment: feedback.sentiment,
       comment: feedback.comment,
+      emotion: feedback.emotion,
+      productRating: feedback.productRating,
+      serviceRating: feedback.serviceRating,
+      teamRating: feedback.teamRating,
+      contactRequested: feedback.contactRequested,
+      contactName: feedback.contactName,
+      contactEmail: feedback.contactEmail,
       createdAt: feedback.createdAt.toISOString(),
     });
   } catch (error) {
@@ -57,6 +71,10 @@ const listFeedback = async (req, res, next) => {
       category: item.category,
       sentiment: item.sentiment,
       comment: item.comment,
+      emotion: item.emotion,
+      productRating: item.productRating,
+      serviceRating: item.serviceRating,
+      teamRating: item.teamRating,
       createdAt: item.createdAt.toISOString(),
     }));
 

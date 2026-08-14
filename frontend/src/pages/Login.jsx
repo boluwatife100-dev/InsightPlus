@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import Logo from '../components/Logo.jsx'
 import { authService } from '../services/index.js'
 import { DEMO_CREDENTIALS } from '../config.js'
 import './Login.css'
+import { toast } from "sonner"
 
 // Login / signup screen. Submissions hit authService.login() (mocked for
 // the hackathon: demo@InsightLoop.app / demo1234, real backend via
@@ -52,6 +52,7 @@ export default function Login() {
   const [searchParams] = useSearchParams()
   const [mode, setMode] = useState(searchParams.get('mode') === 'signup' ? 'signup' : 'login')
   const [businessName, setBusinessName] = useState('')
+  const [ownerName, setOwnerName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -78,10 +79,11 @@ export default function Login() {
     setAuthError(null)
     try {
       if (mode === 'signup') {
-        await authService.signup({ email, password, businessName })
+        await authService.signup({ email, password, businessName, ownerName })
       } else {
         await authService.login({ email, password })
       }
+      toast.success(`Successfully ${mode === 'signup' ? 'signed up' : 'logged in'}!`)
       navigate('/dashboard')
     } catch (err) {
       setAuthError(err.message)
@@ -172,20 +174,36 @@ export default function Login() {
 
           <form className="auth__form" onSubmit={handleSubmit}>
             {mode === 'signup' && (
-              <div className="field">
-                <label className="field-label" htmlFor="business">
-                  Business name
-                </label>
-                <input
-                  id="business"
-                  className="input auth__input"
-                  type="text"
-                  placeholder="e.g. Rite Restaurant"
-                  value={businessName}
-                  onChange={(e) => setBusinessName(e.target.value)}
-                  required
-                />
-              </div>
+              <>
+                <div className="field">
+                  <label className="field-label" htmlFor="ownerName">
+                    Your name
+                  </label>
+                  <input
+                    id="ownerName"
+                    className="input auth__input"
+                    type="text"
+                    placeholder="e.g. Sarah Johnson"
+                    value={ownerName}
+                    onChange={(e) => setOwnerName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="field">
+                  <label className="field-label" htmlFor="business">
+                    Business name
+                  </label>
+                  <input
+                    id="business"
+                    className="input auth__input"
+                    type="text"
+                    placeholder="e.g. Rite Restaurant"
+                    value={businessName}
+                    onChange={(e) => setBusinessName(e.target.value)}
+                    required
+                  />
+                </div>
+              </>
             )}
 
             <div className="field">

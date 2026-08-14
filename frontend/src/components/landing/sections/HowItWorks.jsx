@@ -32,7 +32,7 @@ export default function HowItWorks() {
         </div>
 
         <div className="mt-8 flex justify-center min-[721px]:mt-12">
-          <LandingButton href="#" size="lg" width="mobile" className="max-w-[20rem]">
+          <LandingButton href="#" size="lg" width="mobile" className="max-w-[20rem] rounded-sm">
             <span
               className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/[0.22] [&_svg]:ml-[0.1rem] [&_svg]:h-[0.8rem] [&_svg]:w-[0.8rem]"
               aria-hidden="true"

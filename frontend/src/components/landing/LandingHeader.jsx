@@ -7,20 +7,20 @@ import { CONTAINER, EASE_OUT, ICON_BUTTON, NAV_LINK_HOVER } from './styles.js'
 
 // Decorative iOS status bar, phone only — sells the "app" feel above
 // the marketing nav.
-function StatusBar() {
-  return (
-    <div
-      className="flex h-[calc(env(safe-area-inset-top)+2.5rem)] items-center justify-between bg-[linear-gradient(180deg,rgba(246,244,252,0.95),rgba(246,244,252,0))] px-6 pt-[calc(env(safe-area-inset-top)+0.25rem)] text-sm font-bold text-[var(--color-primary-strong)] min-[721px]:hidden"
-      aria-hidden="true"
-    >
-      <span>9:41</span>
-      <span className="flex items-center gap-2">
-        <SignalCheckIcon className="h-[1.05rem] w-[1.05rem]" />
-        <BatteryIcon className="h-[1.05rem] w-[1.05rem]" />
-      </span>
-    </div>
-  )
-}
+// function StatusBar() {
+//   return (
+//     // <div
+//     //   className="flex h-[calc(env(safe-area-inset-top)+2.5rem)] items-center justify-between bg-[linear-gradient(180deg,rgba(246,244,252,0.95),rgba(246,244,252,0))] px-6 pt-[calc(env(safe-area-inset-top)+0.25rem)] text-sm font-bold text-[var(--color-primary-strong)] min-[721px]:hidden"
+//     //   aria-hidden="true"
+//     // >
+//     //   <span>9:41</span>
+//     //   <span className="flex items-center gap-2">
+//     //     <SignalCheckIcon className="h-[1.05rem] w-[1.05rem]" />
+//     //     <BatteryIcon className="h-[1.05rem] w-[1.05rem]" />
+//     //   </span>
+//     // </div>
+//   )
+// }
 
 // Native <details> disclosure: the menu opens on click and closes when a
 // link inside is chosen, with no extra state to keep in sync.
@@ -75,14 +75,14 @@ export default function LandingHeader({ menuOpen, onOpenMenu }) {
 
   return (
     <header className="sticky top-0 z-40 border-b border-[rgba(215,205,240,0.7)] bg-[rgba(246,244,252,0.82)] backdrop-blur-[12px]">
-      <StatusBar />
+      {/* <StatusBar /> */}
 
-      <div className={`${CONTAINER} flex items-center gap-6 pt-1 pb-2 min-[721px]:py-3`}>
+      <div className={`${CONTAINER} flex items-center gap-6 py-4 min-[721px]:py-6`}>
         <a href="#top" className="inline-flex shrink-0 leading-none">
           <img
             src="/in-logo.png"
             alt="InsightLoop logo"
-            className="h-12 w-fit"
+            className="h-auto w-40"
           />
         </a>
 

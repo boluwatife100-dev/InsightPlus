@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import StarRating from '../StarRating.jsx'
 import SentimentBadge from '../SentimentBadge.jsx'
 import './RecentFeedbackFeed.css'
+import { ArrowRight, ChevronRight } from 'lucide-react'
 
 // Vector mood icons (single-color line style; no emoji chars).
 const MOOD_ICONS = {
@@ -33,13 +34,17 @@ const MOOD_ICONS = {
 // only the 3 most recent items show with a 1-line comment preview.
 export default function RecentFeedbackFeed({ items, to = '/dashboard/feedback' }) {
   return (
-    <div className="card feed-card">
-      <div className="feed-card__head">
-        <div>
-          <h3 className="card-title">Recent Feedback</h3>
-          <p className="card-subtitle">Latest submissions, auto-tagged</p>
+    <div className="card feed-card rounded-sm!">
+      <div className="">
+        <div className='flex flex-row justify-between items-center'>
+          <h3 className="font-semibold text-lg ">Recent Feedback</h3>
+
+          <Link to={to} className="flex gap-1 items-center font-semibold text-lg">
+          View all Feedbacks
+          <ArrowRight size={20}/>
+        </Link>
         </div>
-        <span className="feed-card__count">{items.length} new</span>
+       
       </div>
 
       <ul className="feed-card__list">
@@ -76,18 +81,7 @@ export default function RecentFeedbackFeed({ items, to = '/dashboard/feedback' }
       </ul>
 
       <div className="feed-card__foot">
-        <Link to={to} className="feed-card__more">
-          View all Feedbacks
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path
-              d="M5 12h14M13 6l6 6-6 6"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </Link>
+        
       </div>
     </div>
   )

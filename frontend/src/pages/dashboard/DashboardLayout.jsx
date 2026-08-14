@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
-import { NavLink, Outlet, Link, useLocation } from 'react-router-dom'
+import { NavLink, Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import Logo from '../../components/Logo.jsx'
 import BusinessSwitcher from '../../components/dashboard/BusinessSwitcher.jsx'
 import { authService, businessService } from '../../services/index.js'
 import { useApi } from '../../hooks/useApi.js'
 import './DashboardLayout.css'
 import './DashboardMobile.css'
+import { toast } from "sonner"
+import { ArrowRight, CircleHelp } from "lucide-react"
 
 const NAV_ITEMS = [
   {
@@ -79,15 +81,34 @@ const NAV_ITEMS = [
 export default function DashboardLayout() {
   const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
 
   const meQuery = useApi(() => authService.getMe(), [])
   const businessesQuery = useApi(() => businessService.listBusinesses(), [])
   const me = meQuery.data
   const businesses = businessesQuery.data ?? []
   const firstName = me?.name?.split(' ')[0] ?? 'Sarah'
+  const businessName = businesses[0]?.name ?? '__'
 
   const closeMenu = () => setMenuOpen(false)
   const isOverview = location.pathname === '/dashboard'
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout()
+    } finally {
+      toast.success('Logged out successfully.')
+      navigate('/login')
+    }
+  }
+
+  const getGreetingTime = () => {
+    const currentHour = new Date().getHours()
+
+    if (currentHour < 12) return 'morning'
+    if (currentHour < 18) return 'afternoon'
+    return 'evening'
+  }
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
@@ -117,7 +138,7 @@ export default function DashboardLayout() {
           </svg>
         </button>
         <Link to="/" className="dash-mob__logo" aria-label="InsightLoop home">
-          <Logo />
+          <img src="/in-logo.png" alt="InsightLoop" className="w-36 h-auto" />
         </Link>
         <button type="button" className="dash-mob__icon-btn" aria-label="Notifications">
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -137,7 +158,7 @@ export default function DashboardLayout() {
       <aside className="dash__sidebar">
         <div className="dash__sidebar-head">
           <Link to="/" aria-label="InsightLoop home">
-            <Logo />
+          <img src="/in-logo.png" alt="InsightLoop" className="w-full h-auto py-2 border-b" />
           </Link>
         </div>
 
@@ -161,19 +182,22 @@ export default function DashboardLayout() {
         </nav>
 
         <div className="dash__support">
-          <p className="dash__support-title">Need help?</p>
-          <Link to="/login" className="dash__support-link">
-            Visit Help Center
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path
-                d="M5 12h14M13 6l6 6-6 6"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </Link>
+          <div className="flex gap-2 items-center">
+
+            <CircleHelp className="w-5 h-5 text-[#630ED4]" aria-hidden="true" />
+
+          <p className="tracking-wider text-sm font-light text-(--color-text-muted)">Need help?</p>
+          </div>
+          
+          <p to="/login" className="font-light text-xs text-(--color-text-muted) tracking-wider my-2">
+            Visit our Help Center or contact support
+            
+          </p>
+          <span className="flex items-center text-sm font-light gap-2 text-[#630ED4] cursor-pointer">
+          <p>Help Center</p>
+          <ArrowRight className='w-6 h-4'/>
+          </span>
+         
         </div>
 
         <div className="dash__profile">
@@ -184,7 +208,7 @@ export default function DashboardLayout() {
             <strong>{me?.name ?? 'Account'}</strong>
             <span>{me?.role ?? 'Owner'}</span>
           </div>
-          <Link to="/login" className="dash__logout" title="Log out" aria-label="Log out">
+          <button type="button" onClick={handleLogout} className="dash__logout" title="Log out" aria-label="Log out">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path
                 d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4m7 14l5-5-5-5m5 5H9"
@@ -194,7 +218,7 @@ export default function DashboardLayout() {
                 strokeLinejoin="round"
               />
             </svg>
-          </Link>
+          </button>
         </div>
       </aside>
 
@@ -211,7 +235,7 @@ export default function DashboardLayout() {
       >
         <div className="dash-mob__drawer-head">
           <Link to="/" aria-label="InsightLoop home" onClick={closeMenu}>
-            <Logo />
+            <img src="/in-logo.png" alt="InsightLoop" className="w-30 h-auto py-2" />
           </Link>
           <button
             type="button"
@@ -274,7 +298,7 @@ export default function DashboardLayout() {
             <strong>{me?.name ?? 'Account'}</strong>
             <span>{me?.role ?? 'Owner'}</span>
           </div>
-          <Link to="/login" className="dash__logout" title="Log out" aria-label="Log out">
+          <button type="button" onClick={handleLogout} className="dash__logout" title="Log out" aria-label="Log out">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path
                 d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4m7 14l5-5-5-5m5 5H9"
@@ -284,22 +308,24 @@ export default function DashboardLayout() {
                 strokeLinejoin="round"
               />
             </svg>
-          </Link>
+          </button>
         </div>
       </aside>
 
       <div className="dash__main">
         {/* Desktop top bar */}
-        <header className="dash__topbar">
+        <header className="flex px-6 justify-between py-6 items-center">
           {isOverview && (
-            <div className="dash__greeting">
-              <strong>Good morning, {firstName}</strong>
-              <span>Here's what's happening at Rite Restaurant today.</span>
+            <div className=" flex flex-col gap-1">
+              <strong className='font-extrabold leading-tight text-lg md:text-2xl'>Good {getGreetingTime()}, {firstName}!</strong>
+              <span className="text-sm tracking-wide text-muted-foreground">
+                Here's what's happening at {businessName}
+              </span>
             </div>
           )}
 
           <div className="dash__topbar-right">
-            <button type="button" className="dash__date-range" aria-label="Change date range">
+            <button type="button" className="dash__date-range border-[#630ED4]!" aria-label="Change date range rounded-sm!">
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <rect x="3" y="4.5" width="18" height="17" rx="3" stroke="currentColor" strokeWidth="1.8" />
                 <path d="M3 9.5h18M8 2.5v4M16 2.5v4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
@@ -310,7 +336,7 @@ export default function DashboardLayout() {
               </svg>
             </button>
 
-            <button type="button" className="dash__icon-btn" aria-label="Notifications">
+            <button type="button" className="dash__icon-btn border-[#630ED4]!" aria-label="Notifications">
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path
                   d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"
@@ -323,7 +349,7 @@ export default function DashboardLayout() {
               <span className="dash__notif-dot" aria-hidden="true" />
             </button>
 
-            <Link to="/feedback" className="btn btn-primary btn-sm">
+            <Link to="/feedback" className="btn btn-primary btn-sm rounded-sm! py-3 gap-2!">
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path
                   d="M12 5v14M5 12h14"
@@ -332,7 +358,7 @@ export default function DashboardLayout() {
                   strokeLinecap="round"
                 />
               </svg>
-              + New Survey
+              +  New Survey
             </Link>
           </div>
         </header>

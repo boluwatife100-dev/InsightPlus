@@ -52,8 +52,8 @@
 .stat-card__delta {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1);
-  font-size: var(--text-xs);
+  gap: 2px;
+  font-size: var(--text-sm);
   font-weight: 700;
   padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-pill);
@@ -61,17 +61,17 @@
 
 .stat-card__delta--up {
   color: var(--color-positive);
-  background-color: var(--color-positive-light);
+ 
 }
 
 .stat-card__delta--down {
   color: var(--color-negative);
-  background-color: var(--color-negative-light);
+
 }
 
 .stat-card__delta svg {
-  width: 0.8rem;
-  height: 0.8rem;
+  width: 0.9rem;
+  height: 0.9rem;
 }
 
 .stat-card__label {
@@ -81,7 +81,7 @@
 }
 
 .stat-card__value {
-  font-size: var(--text-4xl);
+  font-size: var(--text-5xl);
   font-weight: 800;
   color: var(--color-text);
   line-height: 1;

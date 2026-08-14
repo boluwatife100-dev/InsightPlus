@@ -53,9 +53,11 @@ const getOverview = async (req, res, next) => {
     };
 
     const frictionPoints = [
-      { label: 'Slow service', pct: 42 },
-      { label: 'Food temperature', pct: 27 },
-      { label: 'Order accuracy', pct: 18 },
+      { label: 'Slow delivery', pct: 42 },
+      { label: 'Long wait time', pct: 21 },
+      { label: 'Pricing concerns', pct: 13},
+      { label: 'App Glitches', pct: 9 },
+      { label: 'Other', pct: 15 },
     ];
 
     const recentFeedback = allFeedback.slice(0, 8).map((item) => ({

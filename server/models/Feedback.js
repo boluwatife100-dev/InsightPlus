@@ -11,6 +11,13 @@ const feedbackSchema = new mongoose.Schema(
       enum: ['positive', 'neutral', 'negative'],
       required: true,
     },
+    emotion: { type: String },
+    productRating: { type: Number, min: 1, max: 5 },
+    serviceRating: { type: Number, min: 1, max: 5 },
+    teamRating: { type: Number, min: 1, max: 5 },
+    contactRequested: { type: Boolean, default: false },
+    contactName: { type: String },
+    contactEmail: { type: String },
   },
   { timestamps: true }
 );

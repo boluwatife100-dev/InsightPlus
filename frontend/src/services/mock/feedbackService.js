@@ -8,7 +8,7 @@ export async function listFeedback() {
   return clone(mockFeedback)
 }
 
-export async function submitFeedback({ rating, category, comment }) {
+export async function submitFeedback({ rating, category, comment, emotion, productRating, serviceRating, teamRating }) {
   await delay(240)
   return {
     id: 'new',
@@ -17,6 +17,10 @@ export async function submitFeedback({ rating, category, comment }) {
     category,
     sentiment: rating >= 4 ? 'positive' : rating === 3 ? 'neutral' : 'negative',
     comment,
+    emotion,
+    productRating,
+    serviceRating,
+    teamRating,
     createdAt: 'just now',
   }
 }

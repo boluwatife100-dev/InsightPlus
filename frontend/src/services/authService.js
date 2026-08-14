@@ -42,13 +42,13 @@ export async function login({ email, password }) {
  * success: 201 → { token: string, user: User }
  * failure: 400|409 → { detail: string }
  *
- * @param {{ email: string, password: string, businessName: string }} credentials
+ * @param {{ email: string, password: string, businessName: string, ownerName: string }} credentials
  * @returns {Promise<User>}
  */
-export async function signup({ email, password, businessName }) {
+export async function signup({ email, password, businessName, ownerName }) {
   const data = await apiFetch(ENDPOINTS.auth.signup, {
     method: 'POST',
-    body: { email, password, businessName },
+    body: { email, password, businessName, ownerName },
   })
   setToken(data.token)
   return data.user

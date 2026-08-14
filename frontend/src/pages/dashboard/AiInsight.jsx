@@ -1,5 +1,4 @@
-import AiInsightCard from '../../components/dashboard/AiInsightCard.jsx'
-import RecommendedActionCard from '../../components/dashboard/RecommendedActionCard.jsx'
+import CombinedAiInsight from '../../components/dashboard/CombinedAiInsight.jsx'
 import IssuesBreakdown from '../../components/dashboard/IssuesBreakdown.jsx'
 import { aiInsightsService } from '../../services/index.js'
 import { useApi } from '../../hooks/useApi.js'
@@ -19,10 +18,7 @@ export default function AiInsight() {
           </p>
         </header>
         <div className="dash__grid" aria-busy="true">
-          <div className="dash__span-7">
-            <div className="card skeleton-card" style={{ height: '12rem' }} />
-          </div>
-          <div className="dash__span-5">
+          <div className="dash__span-12">
             <div className="card skeleton-card" style={{ height: '12rem' }} />
           </div>
           <div className="dash__span-12">
@@ -55,11 +51,12 @@ export default function AiInsight() {
       </header>
 
       <div className="dash__grid">
-        <div className="dash__span-7">
-          <AiInsightCard summary={data.summary.text} highlights={data.summary.highlights} />
-        </div>
-        <div className="dash__span-5">
-          <RecommendedActionCard text={data.recommendedAction.text} />
+        <div className="dash__span-12">
+          <CombinedAiInsight 
+            summary={data.summary.text} 
+            highlights={data.summary.highlights} 
+            actionText={data.recommendedAction.text} 
+          />
         </div>
         <div className="dash__span-12">
           <IssuesBreakdown issues={data.issues} />

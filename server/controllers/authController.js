@@ -9,10 +9,10 @@ const createToken = (userId) => {
 
 const signup = async (req, res, next) => {
   try {
-    const { email, password, businessName } = req.body;
+    const { email, password, businessName, ownerName } = req.body;
 
-    if (!email || !password || !businessName) {
-      return res.status(400).json({ detail: 'Email, password, and business name are required.' });
+    if (!email || !password || !businessName || !ownerName) {
+      return res.status(400).json({ detail: 'Email, password, business name, and owner name are required.' });
     }
 
     const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
@@ -20,13 +20,25 @@ const signup = async (req, res, next) => {
       return res.status(409).json({ detail: 'Email is already registered.' });
     }
 
+    const existingBusiness = await Business.findOne({ name: businessName.trim() });
+    if (existingBusiness) {
+      return res.status(409).json({ detail: 'Business name is already taken.' });
+    }
+
+    const nameToUse = ownerName.trim();
     const user = new User({
       email: email.toLowerCase().trim(),
       passwordHash: password,
-      name: 'Owner',
+      name: nameToUse,
       role: 'Owner'
     });
-    user.initials = 'OW';
+    
+    user.initials = nameToUse
+      .split(' ')
+      .filter(Boolean)
+      .map((part) => part[0].toUpperCase())
+      .slice(0, 2)
+      .join('') || 'OW';
 
     await user.save();
 

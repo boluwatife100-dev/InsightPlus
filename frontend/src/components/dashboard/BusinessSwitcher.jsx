@@ -5,9 +5,8 @@ import './BusinessSwitcher.css'
 // mobile subhead. `compact` renders the mobile pill variant (no avatar/plan).
 // The business list is supplied by the parent (fetched via
 // businessService.listBusinesses) so the switcher stays presentational.
-export default function BusinessSwitcher({ compact = false, businesses = [] }) {
+export default function BusinessSwitcher({ compact = false, businesses = [], activeBusiness, onChange }) {
   const [open, setOpen] = useState(false)
-  const [business, setBusiness] = useState(null)
   const ref = useRef(null)
 
   useEffect(() => {
@@ -21,10 +20,10 @@ export default function BusinessSwitcher({ compact = false, businesses = [] }) {
   }, [])
 
   useEffect(() => {
-    if (!business && businesses.length > 0) {
-      setBusiness(businesses[0])
+    if (!activeBusiness && businesses.length > 0) {
+      onChange?.(businesses[0])
     }
-  }, [businesses, business])
+  }, [businesses, activeBusiness, onChange])
 
   return (
     <div className={`dash__switcher ${compact ? 'dash__switcher--compact' : ''}`} ref={ref}>
@@ -38,12 +37,12 @@ export default function BusinessSwitcher({ compact = false, businesses = [] }) {
       >
         {!compact && (
           <span className="dash__business-avatar" aria-hidden="true">
-            {business?.initials ?? '·'}
+            {activeBusiness?.initials ?? '·'}
           </span>
         )}
         <span className="dash__business-meta">
-          <strong>{business?.name ?? 'Select business'}</strong>
-          {!compact && <span>{business?.plan ?? 'Loading…'}</span>}
+          <strong>{activeBusiness?.name ?? 'Select business'}</strong>
+          {!compact && <span>{activeBusiness?.plan ?? 'Loading…'}</span>}
         </span>
         <svg
           className={`dash__switcher-chevron ${open ? 'dash__switcher-chevron--open' : ''}`}
@@ -64,12 +63,12 @@ export default function BusinessSwitcher({ compact = false, businesses = [] }) {
       {open && businesses.length > 0 && (
         <ul className="dash__switcher-menu" role="listbox" aria-label="Switch business">
           {businesses.map((item) => (
-            <li key={item.id} role="option" aria-selected={item.id === business?.id}>
+            <li key={item.id} role="option" aria-selected={item.id === activeBusiness?.id}>
               <button
                 type="button"
-                className={`dash__switcher-option ${item.id === business?.id ? 'dash__switcher-option--active' : ''}`}
+                className={`dash__switcher-option ${item.id === activeBusiness?.id ? 'dash__switcher-option--active' : ''}`}
                 onClick={() => {
-                  setBusiness(item)
+                  onChange?.(item)
                   setOpen(false)
                 }}
               >
@@ -80,7 +79,7 @@ export default function BusinessSwitcher({ compact = false, businesses = [] }) {
                   <strong>{item.name}</strong>
                   <span>{item.plan}</span>
                 </span>
-                {item.id === business?.id && (
+                {item.id === activeBusiness?.id && (
                   <svg className="dash__switcher-check" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <path
                       d="M20 6L9 17l-5-5"

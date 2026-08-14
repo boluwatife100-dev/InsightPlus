@@ -52,6 +52,11 @@ const updateCurrentBusiness = async (req, res, next) => {
     }
 
     if (payload.name) {
+      const existingBusiness = await Business.findOne({ name: payload.name, _id: { $ne: business._id } });
+      if (existingBusiness) {
+        return res.status(409).json({ detail: 'Business name is already taken.' });
+      }
+
       business.name = payload.name;
       business.initials = payload.name
         .split(' ')
