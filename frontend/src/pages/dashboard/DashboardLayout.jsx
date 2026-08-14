@@ -24,7 +24,7 @@ const NAV_ITEMS = [
     ),
   },
   {
-    to: '/dashboard/feedback',
+    to: '/feedback',
     label: 'Feedback',
     end: false,
     icon: (
@@ -89,6 +89,8 @@ export default function DashboardLayout() {
   const businesses = businessesQuery.data ?? []
   const firstName = me?.name?.split(' ')[0] ?? 'Sarah'
   const businessName = businesses[0]?.name ?? '__'
+
+  const [activeBusiness, setActiveBusiness] = useState(null)
 
   const closeMenu = () => setMenuOpen(false)
   const isOverview = location.pathname === '/dashboard'
@@ -162,7 +164,7 @@ export default function DashboardLayout() {
           </Link>
         </div>
 
-        <BusinessSwitcher businesses={businesses} />
+        <BusinessSwitcher businesses={businesses} activeBusiness={activeBusiness} onChange={setActiveBusiness} />
 
         <nav className="dash__nav" aria-label="Dashboard">
           <p className="dash__nav-label">Menu</p>
@@ -349,7 +351,7 @@ export default function DashboardLayout() {
               <span className="dash__notif-dot" aria-hidden="true" />
             </button>
 
-            <Link to="/feedback" className="btn btn-primary btn-sm rounded-sm! py-3 gap-2!">
+            <Link to={`/feedback${activeBusiness ? `?business=${encodeURIComponent(activeBusiness.name)}` : ''}`}  className="btn btn-primary btn-sm rounded-sm! py-3 gap-2!">
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path
                   d="M12 5v14M5 12h14"

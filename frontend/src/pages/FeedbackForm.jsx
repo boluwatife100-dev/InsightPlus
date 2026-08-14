@@ -159,7 +159,6 @@ export default function FeedbackForm() {
     productRating > 0 && 
     serviceRating > 0 && 
     teamRating > 0 && 
-    comment.trim() == '' && 
     (!contact || (contactName.trim() !== '' && contactEmail.trim() !== ''))
 
   const handleSubmit = async (e) => {
@@ -183,8 +182,7 @@ export default function FeedbackForm() {
         contactName,
         contactEmail
       })
-      toast.success("Feedback Submitted Successfully")
-      navigate('/')
+      navigate('/thank-you')
     } catch (err) {
       setError(err.message || 'Failed to submit feedback')
       toast.error(err.message || err)
