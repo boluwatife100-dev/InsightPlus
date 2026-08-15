@@ -34,6 +34,7 @@ const seedData = async () => {
       category: 'Food',
       sentiment: 'positive',
       comment: 'Great service and delicious food. We will come back again!',
+      business: demoBusiness._id,
     },
     {
       author: 'Anonymous',
@@ -41,6 +42,7 @@ const seedData = async () => {
       category: 'Service',
       sentiment: 'negative',
       comment: 'Staff were slow and forgot our drink order.',
+      business: demoBusiness._id,
     },
     {
       author: 'Anonymous',
@@ -48,6 +50,7 @@ const seedData = async () => {
       category: 'Ambience',
       sentiment: 'positive',
       comment: 'Nice atmosphere, pleasant lighting, and the music was just right.',
+      business: demoBusiness._id,
     },
   ];
 

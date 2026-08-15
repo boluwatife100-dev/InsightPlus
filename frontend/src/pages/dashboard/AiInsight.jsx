@@ -107,7 +107,7 @@ export default function AiInsight() {
           />
         </div>
         <div className="dash__span-12">
-          <IssuesBreakdown issues={data.issues} />
+          <IssuesBreakdown issues={data.issues} totalResponses={data.totalResponses} />
         </div>
       </div>
     </div>

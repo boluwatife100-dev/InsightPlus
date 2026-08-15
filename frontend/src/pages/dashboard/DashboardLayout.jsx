@@ -256,7 +256,7 @@ export default function DashboardLayout() {
           </button>
         </div>
 
-        <BusinessSwitcher businesses={businesses} />
+        {/* <BusinessSwitcher businesses={businesses} /> */}
 
         <nav className="dash-mob__drawer-nav" aria-label="Dashboard">
           <p className="dash__nav-label">Menu</p>
@@ -276,7 +276,7 @@ export default function DashboardLayout() {
           ))}
         </nav>
 
-        <div className="dash__support">
+        {/* <div className="dash__support">
           <p className="dash__support-title">Need help?</p>
           <Link to="/login" className="dash__support-link" onClick={closeMenu}>
             Visit Help Center
@@ -290,7 +290,7 @@ export default function DashboardLayout() {
               />
             </svg>
           </Link>
-        </div>
+        </div> */}
 
         <div className="dash__profile">
           <span className="avatar dash__profile-avatar" aria-hidden="true">
@@ -351,7 +351,7 @@ export default function DashboardLayout() {
               <span className="dash__notif-dot" aria-hidden="true" />
             </button>
 
-            <Link to={`/feedback${activeBusiness ? `?business=${encodeURIComponent(activeBusiness.name)}` : ''}`}  className="btn btn-primary btn-sm rounded-sm! py-3 gap-2!">
+            <Link to={`/feedback${activeBusiness ? `?businessId=${activeBusiness.id}&business=${encodeURIComponent(activeBusiness.name)}` : ''}`}  className="btn btn-primary btn-sm rounded-sm! py-3 gap-2!">
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path
                   d="M12 5v14M5 12h14"

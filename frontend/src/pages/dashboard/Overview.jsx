@@ -97,7 +97,7 @@ export default function Overview() {
 
         {/* Row 3 */}
         <div className="dash__span-6">
-          <IssuesBreakdown issues={data.frictionPoints} />
+          <IssuesBreakdown issues={data.frictionPoints} totalResponses={data.newResponses.count} />
         </div>
         <div className="dash__span-6">
           <RecentFeedbackFeed items={data.recentFeedback} />

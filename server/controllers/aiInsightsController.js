@@ -15,28 +15,54 @@ const getInsights = async (req, res, next) => {
     const latestInsight = await AiInsight.findOne({ business: business._id }).sort({ createdAt: -1 });
 
     if (latestInsight) {
+      const feedbackCount = await Feedback.countDocuments({ business: business._id });
       return res.json({
         summary: latestInsight.summary,
         recommendedAction: latestInsight.recommendedAction,
         issues: latestInsight.issues,
-        updatedAt: latestInsight.updatedAt
+        updatedAt: latestInsight.updatedAt,
+        totalResponses: feedbackCount
+      });
+    }
+
+    const feedbackCount = await Feedback.countDocuments({ business: business._id });
+    if (feedbackCount === 0) {
+      return res.json({
+        summary: {
+          text: 'No feedback data yet. Please share your feedback link with customers to start collecting insights and discover actionable themes for your business.',
+          highlights: ['share your feedback link'],
+        },
+        recommendedAction: {
+          text: 'Copy your feedback link and share it with your customers to get started.',
+        },
+        issues: [],
+        totalResponses: 0
       });
     }
 
     // Default fallback if no insights have ever been generated for this business
-    let topIssues = [
-      { label: 'Service', pct: 48, count: 576 },
-      { label: 'Food quality', pct: 26, count: 312 },
-      { label: 'Cleanliness', pct: 16, count: 192 },
-    ];
+    const allFeedback = await Feedback.find({ business: business._id }).lean();
+    const categoryCounts = {};
+    allFeedback.forEach(f => {
+      categoryCounts[f.category] = (categoryCounts[f.category] || 0) + 1;
+    });
+    
+    let topIssues = Object.entries(categoryCounts)
+      .map(([label, count]) => ({
+        label,
+        pct: Math.round((count / feedbackCount) * 100),
+        count
+      }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
 
     let summary = {
-      text: 'Customers are enjoying the core menu, but recurring service and cleanliness issues are keeping overall sentiment from reaching the next level.',
-      highlights: ['core menu', 'service', 'cleanliness'],
+      text: 'You have new feedback! Click "Get Latest AI Insight" to generate a deep AI analysis and discover actionable themes for your business.',
+      highlights: ['Get Latest AI Insight'],
     };
     
     let recommendedAction = {
-      text: 'Train the team on a standard closing checklist and add an extra cleanup shift after peak hours.',
+      text: 'Click the generate button above to get your first AI-driven recommended action.',
     };
 
     res.json({
@@ -79,7 +105,8 @@ const generateInsights = async (req, res, next) => {
       summary: newInsight.summary,
       recommendedAction: newInsight.recommendedAction,
       issues: newInsight.issues,
-      updatedAt: newInsight.updatedAt
+      updatedAt: newInsight.updatedAt,
+      totalResponses: feedback.length
     });
   } catch (error) {
     next(error);

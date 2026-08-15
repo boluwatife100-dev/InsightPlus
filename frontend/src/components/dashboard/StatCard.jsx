@@ -13,6 +13,11 @@ export default function StatCard({
   spark,
   tone = 'default',
 }) {
+  const deltaStr = String(delta || '');
+  const isNegative = deltaStr.includes('▼') || deltaStr.includes('-');
+  const isPositive = deltaStr.includes('▲') || deltaStr.includes('+');
+  const computedDeltaTone = isNegative ? 'down' : isPositive ? 'up' : deltaTone;
+
   return (
     <div className={`card stat-card justify-between! rounded-sm! border-black! stat-card--${tone}`}>
       <span className="flex gap-2 items-center font-semibold text-lg">
@@ -46,9 +51,9 @@ export default function StatCard({
         </svg>
       )}
        {delta && (
-          <span className={`stat-card__delta stat-card__delta--${deltaTone} tracking-wide!`}>
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              {deltaTone === 'down' ? (
+          <span className={`stat-card__delta stat-card__delta--${computedDeltaTone} tracking-wide!`}>
+            {/* <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              {computedDeltaTone === 'down' ? (
                 <path
                   d="M12 5v14M5 12l7 7 7-7"
                   stroke="currentColor"
@@ -65,7 +70,7 @@ export default function StatCard({
                   strokeLinejoin="round"
                 />
               )}
-            </svg>
+            </svg> */}
             {delta}
           </span>
         )}

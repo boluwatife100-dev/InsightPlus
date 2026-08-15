@@ -11,6 +11,12 @@ export default function CsatScoreCard({ csat }) {
   const prevMonthLastDay = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
   const prevMonthString = `vs ${prevMonthName} 1 - ${prevMonthName} ${prevMonthLastDay}`;
 
+  const deltaStr = String(csat?.delta || '');
+  const isNegative = deltaStr.includes('▼') || deltaStr.includes('-');
+  const isPositive = deltaStr.includes('▲') || deltaStr.includes('+');
+  
+  const deltaColor = isPositive ? 'green' : isNegative ? 'red' : 'inherit';
+
   return (
     <div className="csat-card rounded-sm!">
       <div className="csat-card__content">
@@ -30,15 +36,21 @@ export default function CsatScoreCard({ csat }) {
           </div>
 
           <div className="csat-card__footer">
-            <span className="csat-card__delta-text">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="csat-card__delta-icon">
-                <path
+            <span className="csat-card__delta-text" style={{ color: deltaColor }}>
+              <svg 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                aria-hidden="true" 
+                className="csat-card__delta-icon"
+                style={{ transform: isNegative ? 'rotate(180deg)' : 'none' }}
+              >
+                {/* <path
                   d="M12 5v14M5 12l7 7 7-7"
                   stroke="currentColor"
                   strokeWidth="2.2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                />
+                /> */}
               </svg>
               {csat?.delta || ''}
             </span>

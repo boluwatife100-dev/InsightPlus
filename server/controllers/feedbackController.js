@@ -8,9 +8,29 @@ const inferSentiment = (rating) => {
 
 const createFeedback = async (req, res, next) => {
   try {
-    const { rating, category, comment, author, emotion, productRating, serviceRating, teamRating, contactRequested, contactName, contactEmail } = req.body;
+    const { rating, category, comment, author, emotion, productRating, serviceRating, teamRating, contactRequested, contactName, contactEmail, businessId, businessName } = req.body;
+    let businessIdToUse = businessId;
+    
+    if (businessId === 'demo' || !businessId) {
+      // Try to find the business by name first if provided
+      let targetBusiness = null;
+      if (businessName) {
+        targetBusiness = await require('../models/Business').findOne({ 
+          name: { $regex: new RegExp(`^${businessName}$`, 'i') } 
+        });
+      }
+      
+      if (targetBusiness) {
+        businessIdToUse = targetBusiness._id;
+      } else {
+        // Find a default business or fail gracefully
+        const defaultBusiness = await require('../models/Business').findOne();
+        if (defaultBusiness) businessIdToUse = defaultBusiness._id;
+      }
+    }
     const feedback = await Feedback.create({
       author: contactName ? contactName.trim() : (author && author.toString().trim() ? author.toString().trim() : 'Anonymous'),
+      business: businessIdToUse,
       comment: comment.toString().trim(),
       rating: Number(rating),
       category: category.toString().trim(),
@@ -45,10 +65,22 @@ const createFeedback = async (req, res, next) => {
   }
 };
 
+const getActiveBusiness = async (userId) => {
+  const Business = require('../models/Business');
+  return await Business.findOne({ owner: userId, current: true }) 
+      || await Business.findOne({ owner: userId }).sort({ createdAt: 1 });
+};
+
 const listFeedback = async (req, res, next) => {
   try {
     const { q, sentiment, category } = req.query;
     const filter = {};
+    if (req.user) {
+      const business = await getActiveBusiness(req.user.id);
+      if (business) {
+        filter.business = business._id;
+      }
+    }
 
     if (sentiment) {
       filter.sentiment = sentiment;
@@ -86,7 +118,12 @@ const listFeedback = async (req, res, next) => {
 
 const getIssues = async (req, res, next) => {
   try {
-    const feedback = await Feedback.find().lean();
+    const filter = {};
+    if (req.user) {
+      const business = await getActiveBusiness(req.user.id);
+      if (business) filter.business = business._id;
+    }
+    const feedback = await Feedback.find(filter).lean();
     const counts = feedback.reduce((acc, item) => {
       acc[item.category] = (acc[item.category] || 0) + 1;
       return acc;
@@ -106,7 +143,12 @@ const getIssues = async (req, res, next) => {
 
 const getStats = async (req, res, next) => {
   try {
-    const feedback = await Feedback.find().lean();
+    const filter = {};
+    if (req.user) {
+      const business = await getActiveBusiness(req.user.id);
+      if (business) filter.business = business._id;
+    }
+    const feedback = await Feedback.find(filter).lean();
     const total = feedback.length;
     const average = total
       ? (feedback.reduce((sum, item) => sum + item.rating, 0) / total).toFixed(1)
@@ -135,6 +177,11 @@ const getStats = async (req, res, next) => {
 
 const getSatisfactionTrend = async (req, res, next) => {
   try {
+    const filter = {};
+    if (req.user) {
+      const business = await getActiveBusiness(req.user.id);
+      if (business) filter.business = business._id;
+    }
     const now = new Date();
     const trend = [];
 

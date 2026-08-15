@@ -5,7 +5,15 @@ const Business = require('../models/Business');
 const getOverview = async (req, res, next) => {
   try {
     const { from, to } = req.query;
+    
+    // Find active business first
+    const business = await Business.findOne({ owner: req.user.id, current: true }) 
+      || await Business.findOne({ owner: req.user.id }).sort({ createdAt: 1 });
+
     const match = {};
+    if (business) {
+      match.business = business._id;
+    }
 
     if (from || to) {
       match.createdAt = {};
@@ -27,9 +35,13 @@ const getOverview = async (req, res, next) => {
       const prevTo = new Date(fromDate.getFullYear(), fromDate.getMonth(), 0);
       prevTo.setHours(23, 59, 59, 999);
 
-      const prevFeedback = await Feedback.find({
+      const prevMatch = {
         createdAt: { $gte: prevFrom, $lte: prevTo }
-      }).lean();
+      };
+      if (business) {
+        prevMatch.business = business._id;
+      }
+      const prevFeedback = await Feedback.find(prevMatch).lean();
 
       if (prevFeedback.length > 0) {
         prevAverageScore = prevFeedback.reduce((sum, item) => sum + item.rating, 0) / prevFeedback.length;
@@ -82,28 +94,44 @@ const getOverview = async (req, res, next) => {
       createdAt: item.createdAt.toISOString(),
     }));
 
-    const business = await Business.findOne({ owner: req.user.id, current: true }) 
-      || await Business.findOne({ owner: req.user.id }).sort({ createdAt: 1 });
-
     let latestInsight = null;
     if (business) {
       latestInsight = await AiInsight.findOne({ business: business._id }).sort({ createdAt: -1 });
     }
 
     let aiSummary = {
-      text: 'Customers are mostly happy, but service speed and order accuracy still need attention. Improve training on order handoff and pre-check customer preferences to reduce friction.',
-      highlights: ['service speed', 'order accuracy', 'customer preferences'],
+      text: 'Click "Get Latest AI Insight" on the AI Insights page to generate a deep analysis of your recent customer feedback.',
+      highlights: ['Get Latest AI Insight'],
     };
     let recommendedAction = {
-      text: 'Improve table turnover by introducing a small express service checklist for front-of-house staff.',
+      text: 'Generate your first AI insight to get recommended actions based on your data.',
     };
-    let frictionPoints = [
-      { label: 'Slow delivery', pct: 42 },
-      { label: 'Long wait time', pct: 21 },
-      { label: 'Pricing concerns', pct: 13},
-      { label: 'App Glitches', pct: 9 },
-      { label: 'Other', pct: 15 },
-    ];
+    
+    // Dynamically calculate category breakdown as a fallback for friction points
+    const categoryCounts = {};
+    allFeedback.forEach(f => {
+      categoryCounts[f.category] = (categoryCounts[f.category] || 0) + 1;
+    });
+    
+    let frictionPoints = Object.entries(categoryCounts)
+      .map(([label, count]) => ({
+        label,
+        pct: Math.round((count / scoreCount) * 100),
+        count
+      }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+
+    if (scoreCount === 0) {
+      aiSummary = {
+        text: 'No feedback data yet. Please share your feedback link with customers to start collecting insights and discover actionable themes for your business.',
+        highlights: ['share your feedback link'],
+      };
+      recommendedAction = {
+        text: 'Copy your feedback link and share it with your customers to get started.',
+      };
+      frictionPoints = [];
+    }
 
     if (latestInsight) {
       aiSummary = latestInsight.summary;

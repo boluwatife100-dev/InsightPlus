@@ -57,9 +57,13 @@
   margin-bottom: 24px;
 }
 
+.csat-card__stars-wrapper .star--filled {
+  color: #ffd700;
+}
+
 .csat-card__footer {
   display: flex;
-  align-items: center;
+  align-items: start;
   gap: 6px;
   font-size: 14px;
 }

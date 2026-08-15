@@ -132,6 +132,7 @@ export default function FeedbackForm() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const businessName = searchParams.get('business') || 'RITE RESTAURANT'
+  const businessId = searchParams.get('businessId')
   const [overallRating, setOverallRating] = useState(0)
   const [emotion, setEmotion] = useState(null)
   const [productRating, setProductRating] = useState(0)
@@ -180,7 +181,9 @@ export default function FeedbackForm() {
         teamRating,
         contactRequested: contact,
         contactName,
-        contactEmail
+        contactEmail,
+        businessId,
+        businessName,
       })
       navigate('/thank-you')
     } catch (err) {

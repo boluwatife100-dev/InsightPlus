@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
+import { toast } from 'sonner'
+import { QRCodeSVG } from 'qrcode.react'
 import { businessService } from '../../services/index.js'
 import { useApi } from '../../hooks/useApi.js'
 import './Settings.css'
 
-// Settings page — business profile shell (UI only for the MVP demo).
-// Loads the current business via businessService.getCurrentBusiness()
-// and updates it through businessService.updateBusiness().
 export default function Settings() {
   const { data: business, error, loading, reload } = useApi(
     () => businessService.getCurrentBusiness(),
@@ -24,12 +23,28 @@ export default function Settings() {
     }
   }, [business])
 
+  const feedbackUrl = useMemo(() => {
+    const businessId = business?.id ?? 'demo'
+    const businessName = business?.name ?? 'Demo Business'
+    return `${window.location.origin}/feedback?businessId=${businessId}&business=${encodeURIComponent(businessName)}`
+  }, [business])
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(feedbackUrl)
+      toast.success('Link copied to clipboard')
+    } catch (err) {
+      toast.error('Could not copy link')
+    }
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     if (saving) return
     setSaving(true)
     setSaveError(null)
     try {
+      // Name is locked, so only email is actually editable/submitted
       await businessService.updateBusiness({ name, email })
       setSaved(true)
       setTimeout(() => setSaved(false), 2500)
@@ -70,13 +85,14 @@ export default function Settings() {
               </label>
               <input
                 id="settings-business"
-                className="input"
+                className="input text-muted-foreground bg-gray-200"
                 type="text"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
-                disabled={loading}
-                required
+                disabled
+                readOnly
+                title="Business name can't be changed"
               />
+              <span className="field-hint">Business name can't be changed after setup.</span>
             </div>
 
             <div className="field">
@@ -113,21 +129,25 @@ export default function Settings() {
               Share this link — or print the QR code — so customers can reach your feedback form.
             </p>
             <div className="settings__link-row">
-              <code className="settings__link">InsightLoop.app/f/{business?.id ?? 'your-business'}</code>
-              <button type="button" className="btn btn-secondary">
+              <code
+                className="settings__link"
+                style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+              >
+                {feedbackUrl}
+              </code>
+              <button type="button" className="btn btn-secondary" onClick={handleCopy}>
                 Copy
               </button>
             </div>
-            <div className="settings__qr" aria-hidden="true">
-              <svg viewBox="0 0 60 60" fill="none">
-                <rect x="6" y="6" width="20" height="20" rx="3" fill="currentColor" />
-                <rect x="34" y="6" width="20" height="20" rx="3" fill="currentColor" />
-                <rect x="6" y="34" width="20" height="20" rx="3" fill="currentColor" />
-                <rect x="34" y="34" width="6" height="6" fill="currentColor" />
-                <rect x="48" y="34" width="6" height="6" fill="currentColor" />
-                <rect x="34" y="48" width="6" height="6" fill="currentColor" />
-                <rect x="48" y="48" width="6" height="6" fill="currentColor" />
-              </svg>
+            <div className="settings__qr">
+              <QRCodeSVG
+                value={feedbackUrl}
+                size={128}
+                bgColor="#ffffff"
+                fgColor="#000000"
+                level="M"
+                includeMargin={false}
+              />
             </div>
           </div>
         </div>

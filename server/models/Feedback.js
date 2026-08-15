@@ -15,6 +15,7 @@ const feedbackSchema = new mongoose.Schema(
     productRating: { type: Number, min: 1, max: 5 },
     serviceRating: { type: Number, min: 1, max: 5 },
     teamRating: { type: Number, min: 1, max: 5 },
+    business: { type: mongoose.Schema.Types.ObjectId, ref: 'Business', required: true },
     contactRequested: { type: Boolean, default: false },
     contactName: { type: String },
     contactEmail: { type: String },
