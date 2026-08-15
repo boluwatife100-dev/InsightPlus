@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import './CombinedAiInsight.css'
 
-export default function CombinedAiInsight({ summary, highlights = [], actionText, to = '/dashboard/ai-insight' }) {
+export default function CombinedAiInsight({ summary, highlights = [], actionText, to = '/dashboard/ai-insight', hideLink = false }) {
   let nodes = [summary]
   for (const phrase of highlights) {
     nodes = nodes.flatMap((node) =>
@@ -44,18 +44,20 @@ export default function CombinedAiInsight({ summary, highlights = [], actionText
           <h3 className="combined-ai-card__title">Recommended Action</h3>
         </div>
         <p className="combined-ai-card__text">{actionText}</p>
-        <Link to={to} className="combined-ai-card__link">
-          View all AI Insights
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path
-              d="M5 12h14M13 6l6 6-6 6"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </Link>
+        {!hideLink && (
+          <Link to={to} className="combined-ai-card__link">
+            View all AI Insights
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M5 12h14M13 6l6 6-6 6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </Link>
+        )}
       </div>
     </div>
   )

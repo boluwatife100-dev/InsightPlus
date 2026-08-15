@@ -15,7 +15,10 @@ const apiUrl = (import.meta.env.VITE_API_URL ?? 'http://localhost:5001/api/').re
 
 export const config = {
   apiUrl,
-  defaultRange: { from: '2026-07-01', to: '2026-07-31' },
+  defaultRange: { 
+    from: new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().slice(0, 10), 
+    to: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).toISOString().slice(0, 10) 
+  },
   requestTimeoutMs: 10000,
 }
 

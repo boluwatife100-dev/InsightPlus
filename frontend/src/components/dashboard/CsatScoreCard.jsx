@@ -5,6 +5,12 @@ import StarRating from '../StarRating.jsx'
 export default function CsatScoreCard({ csat }) {
   const maxCount = Math.max(...(csat?.distribution || []), 1)
 
+  const now = new Date();
+  const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const prevMonthName = prevMonth.toLocaleString('default', { month: 'short' });
+  const prevMonthLastDay = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+  const prevMonthString = `vs ${prevMonthName} 1 - ${prevMonthName} ${prevMonthLastDay}`;
+
   return (
     <div className="csat-card rounded-sm!">
       <div className="csat-card__content">
@@ -36,7 +42,7 @@ export default function CsatScoreCard({ csat }) {
               </svg>
               {csat?.delta || ''}
             </span>
-            <span className="csat-card__period">vs Jun 1 - Jun 30</span>
+            <span className="csat-card__period">{prevMonthString}</span>
           </div>
         </div>
 
@@ -51,11 +57,15 @@ export default function CsatScoreCard({ csat }) {
           <div className="csat-card__bars">
             {(csat?.distribution || []).map((count, index) => (
               <div key={csat?.stars?.[index] || index} className="csat-card__bar-col">
-                <div className="csat-card__bar-track">
+                <div className="csat-card__bar-track" title={`${count} ratings`}>
                   <span
                     className="csat-card__bar-fill"
                     style={{ height: `${(count / maxCount) * 100}%` }}
-                  />
+                  >
+                    <span style={{ fontSize: '0.75rem', position: 'absolute', top: '-1.25rem', left: '50%', transform: 'translateX(-50%)' }}>
+                      {count}
+                    </span>
+                  </span>
                 </div>
               </div>
             ))}

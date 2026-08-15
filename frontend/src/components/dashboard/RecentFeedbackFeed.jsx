@@ -29,6 +29,21 @@ const MOOD_ICONS = {
   ),
 }
 
+function timeAgo(dateString) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const seconds = Math.floor((now - date) / 1000);
+  
+  if (isNaN(seconds)) return dateString; // Fallback if invalid date
+  if (seconds < 60) return 'just now';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+}
+
 // Recent feedback feed — latest submissions with star rating + comment (PRD §5.5).
 // Items are fed by the realtime backend subscription in Phase 3. On mobile,
 // only the 3 most recent items show with a 1-line comment preview.
@@ -47,11 +62,11 @@ export default function RecentFeedbackFeed({ items, to = '/dashboard/feedback' }
        
       </div>
 
-      <ul className="feed-card__list">
-        {items.map((item, index) => (
+      <ul className="feed-card__list my-4! overflow-y-auto ">
+        {items.slice(0, 3).map((item, index) => (
           <li
             key={item.id}
-            className={`feed-card__item ${index > 2 ? 'feed-card__item--extra' : ''}`}
+            className={`feed-card__item hover:bg-[#630ED4]/5 p-3! ${index > 2 ? 'feed-card__item--extra' : ''}`}
           >
             <div className="feed-card__top">
               <div className="feed-card__identity">
@@ -61,20 +76,17 @@ export default function RecentFeedbackFeed({ items, to = '/dashboard/feedback' }
                 >
                   {MOOD_ICONS[item.sentiment] ?? MOOD_ICONS.neutral}
                 </span>
-                <span className="avatar feed-card__avatar" aria-hidden="true">
-                  {item.author === 'Anonymous' ? '·' : item.author.slice(0, 2).toUpperCase()}
-                </span>
                 <div>
                   <strong className="feed-card__name">{item.author}</strong>
-                  <span className="feed-card__time">{item.createdAt}</span>
+                  <span className="feed-card__time">{timeAgo(item.createdAt)}</span>
                 </div>
               </div>
               <StarRating value={item.rating} readOnly size="sm" />
             </div>
-            <p className="feed-card__comment feed-card__comment--clamp">{item.comment}</p>
+            <p className="feed-card__comment feed-card__comment--clamp font-mono!">{item.comment}</p>
             <div className="feed-card__meta">
               <SentimentBadge sentiment={item.sentiment} />
-              <span className="feed-card__category">{item.category}</span>
+              {/* <span className="feed-card__category">{item.category}</span> */}
             </div>
           </li>
         ))}

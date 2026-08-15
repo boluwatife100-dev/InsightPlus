@@ -4,6 +4,7 @@ import SentimentBadge from '../../components/SentimentBadge.jsx'
 import { feedbackService } from '../../services/index.js'
 import { useApi } from '../../hooks/useApi.js'
 import './FeedbackPage.css'
+import '../../components/dashboard/RecentFeedbackFeed.css'
 
 const SENTIMENT_FILTERS = [
   { value: 'all', label: 'All' },
@@ -12,7 +13,44 @@ const SENTIMENT_FILTERS = [
   { value: 'negative', label: 'Negative' },
 ]
 
-const CATEGORY_FILTERS = ['All', 'Food', 'Service', 'Pricing', 'Cleanliness', 'Ambience']
+const MOOD_ICONS = {
+  positive: (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M8.5 10.25h.01M15.5 10.25h.01" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+      <path d="M8.5 14.5q3.5 3 7 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  ),
+  neutral: (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M8.5 10.25h.01M15.5 10.25h.01" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+      <path d="M9 15.25h6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  ),
+  negative: (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M8.5 10.25h.01M15.5 10.25h.01" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+      <path d="M8.5 16.5q3.5-3 7 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  ),
+}
+
+function timeAgo(dateString) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const seconds = Math.floor((now - date) / 1000);
+  
+  if (isNaN(seconds)) return dateString; // Fallback if invalid date
+  if (seconds < 60) return 'just now';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+}
 
 // Feedback page — full list view of all submissions with auto-tags
 // (sentiment + theme). Data comes from feedbackService.listFeedback()
@@ -22,19 +60,17 @@ export default function Feedback() {
   const { data, error, loading, reload } = useApi(() => feedbackService.listFeedback(), [])
   const [query, setQuery] = useState('')
   const [sentiment, setSentiment] = useState('all')
-  const [category, setCategory] = useState('All')
   const deferredQuery = useDeferredValue(query)
 
   const filtered = useMemo(() => {
     const q = deferredQuery.trim().toLowerCase()
     return (data ?? []).filter((item) => {
       const matchesQuery =
-        q === '' || item.comment.toLowerCase().includes(q) || item.category.toLowerCase().includes(q)
+        q === '' || item.comment.toLowerCase().includes(q)
       const matchesSentiment = sentiment === 'all' || item.sentiment === sentiment
-      const matchesCategory = category === 'All' || item.category === category
-      return matchesQuery && matchesSentiment && matchesCategory
+      return matchesQuery && matchesSentiment
     })
-  }, [deferredQuery, sentiment, category, data])
+  }, [deferredQuery, sentiment, data])
 
   if (error) {
     return (
@@ -53,7 +89,7 @@ export default function Feedback() {
       <header className="dash__page-head">
         <h1 className="dash__page-title">Feedback</h1>
         <p className="dash__page-subtitle">
-          Every response, automatically tagged by sentiment and theme.
+          Every response, automatically tagged by sentiment.
         </p>
       </header>
 
@@ -67,7 +103,7 @@ export default function Feedback() {
           <input
             className="input feedback-page__search-input"
             type="search"
-            placeholder="Search comments or categories…"
+            placeholder="Search comments…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             aria-label="Search feedback"
@@ -83,19 +119,6 @@ export default function Feedback() {
               onClick={() => setSentiment(f.value)}
             >
               {f.label}
-            </button>
-          ))}
-        </div>
-
-        <div className="feedback-page__filters" role="group" aria-label="Filter by category">
-          {CATEGORY_FILTERS.map((c) => (
-            <button
-              key={c}
-              type="button"
-              className={`chip ${category === c ? 'chip--active' : ''}`}
-              onClick={() => setCategory(c)}
-            >
-              {c}
             </button>
           ))}
         </div>
@@ -118,24 +141,36 @@ export default function Feedback() {
               onClick={() => {
                 setQuery('')
                 setSentiment('all')
-                setCategory('All')
               }}
             >
               Clear filters
             </button>
           </div>
         ) : (
-          <ul className="feedback-page__list">
+          <ul className="feed-card__list my-4!">
             {filtered.map((item) => (
-              <li key={item.id} className="feedback-page__item">
-                <div className="feedback-page__head">
+              <li
+                key={item.id}
+                className="feed-card__item hover:bg-[#630ED4]/5 p-3!"
+              >
+                <div className="feed-card__top">
+                  <div className="feed-card__identity">
+                    <span
+                      className={`feed-card__mood feed-card__mood--${item.sentiment}`}
+                      aria-hidden="true"
+                    >
+                      {MOOD_ICONS[item.sentiment] ?? MOOD_ICONS.neutral}
+                    </span>
+                    <div>
+                      <strong className="feed-card__name">{item.author || 'Anonymous'}</strong>
+                      <span className="feed-card__time">{timeAgo(item.createdAt)}</span>
+                    </div>
+                  </div>
                   <StarRating value={item.rating} readOnly size="sm" />
-                  <span className="feedback-page__time">{item.createdAt}</span>
                 </div>
-                <p className="feedback-page__comment">{item.comment}</p>
-                <div className="feedback-page__meta">
+                <p className="feed-card__comment font-mono!">{item.comment}</p>
+                <div className="feed-card__meta">
                   <SentimentBadge sentiment={item.sentiment} />
-                  <span className="feedback-page__category">{item.category}</span>
                 </div>
               </li>
             ))}

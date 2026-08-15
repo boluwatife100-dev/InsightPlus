@@ -24,7 +24,7 @@ const NAV_ITEMS = [
     ),
   },
   {
-    to: '/feedback',
+    to: '/dashboard/feedback',
     label: 'Feedback',
     end: false,
     icon: (
@@ -316,7 +316,7 @@ export default function DashboardLayout() {
 
       <div className="dash__main">
         {/* Desktop top bar */}
-        <header className="flex px-6 justify-between py-6 items-center">
+        <header className="md:flex px-6 justify-between py-6 hidden items-center">
           {isOverview && (
             <div className=" flex flex-col gap-1">
               <strong className='font-extrabold leading-tight text-lg md:text-2xl'>Good {getGreetingTime()}, {firstName}!</strong>

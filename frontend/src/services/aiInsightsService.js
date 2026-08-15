@@ -25,10 +25,22 @@ import { ENDPOINTS } from '../api/endpoints.js'
  *   issues: [
  *     { label: string, pct: number },   // e.g. { label: "Wait time", pct: 68 }
  *   ],
+ *   updatedAt: string,       // Date of insight generation
  * }
  *
  * @returns {Promise<object>}
  */
 export async function getInsights() {
   return apiFetch(ENDPOINTS.aiInsights.summary)
+}
+
+/**
+ * Generate fresh analysis for the AI Insights page.
+ *
+ * POST /ai-insights/generate
+ *
+ * @returns {Promise<object>}
+ */
+export async function generateInsights() {
+  return apiFetch(ENDPOINTS.aiInsights.generate, { method: 'POST' })
 }

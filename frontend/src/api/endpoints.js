@@ -22,6 +22,7 @@ export const ENDPOINTS = {
   },
   aiInsights: {
     summary: 'ai-insights',
+    generate: 'ai-insights/generate',
   },
   feedback: {
     list: 'feedback',
