@@ -15,7 +15,9 @@ const seedData = require('./utils/seedData');
 const app = express();
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 app.use(cors({
-  origin: CLIENT_URL,
+  origin: process.env.NODE_ENV === 'production'
+    ? 'https://insightloop-sigma.vercel.app'
+    : 'http://localhost:5173',
   credentials: true,
 }));
 app.use(express.json());
