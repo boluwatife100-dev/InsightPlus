@@ -1,89 +1,52 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import './IssuesBreakdown.css'
+import { Info, ArrowRight } from 'lucide-react'
 
-// Top friction points — labeled progress bars per recurring pain theme.
-// Percentages come from the backend theme clustering in Phase 3; bars are
-// sized from the given `pct` and read as text (never color alone).
-// On mobile only the top 3 show by default, with a "View all" expand.
-export default function IssuesBreakdown({ issues, to = '/dashboard/feedback' }) {
-  const [expanded, setExpanded] = useState(false)
-
+export default function IssuesBreakdown({ issues, totalResponses = 1200, to = '/dashboard/feedback' }) {
   return (
-    <div className={`card issues-card ${expanded ? 'issues-card--expanded' : ''}`}>
-      <div className="issues-card__head">
-        <div>
-          <h3 className="card-title">Top Friction Points</h3>
-          <p className="card-subtitle">Share of responses mentioning each theme</p>
-        </div>
-        <span className="issues-card__total">Top 5</span>
+    <div className="bg-white rounded-sm border border-gray-100 shadow-sm p-6 flex flex-col h-full">
+      <div className="flex items-center gap-2 mb-6">
+        <h3 className="text-lg font-semibold text-gray-900">Customer Issues</h3>
+        <Info className="w-5 h-5 text-gray-400" />
       </div>
 
-      <ul className="issues-card__list">
-        {issues.map((issue, index) => (
-          <li
-            key={issue.label}
-            className={`issues-card__item ${index > 2 ? 'issues-card__item--extra' : ''}`}
-          >
-            <div className="issues-card__row">
-              <span className="issues-card__label">
-                {index === 0 && <span className="issues-card__rank" aria-hidden="true">1</span>}
-                {issue.label}
-              </span>
-              <span className="issues-card__count">{issue.pct}%</span>
-            </div>
-            <div
-              className="issues-card__track"
-              role="progressbar"
-              aria-valuenow={issue.pct}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-label={`${issue.label}: ${issue.pct}% of responses`}
-            >
-              <span
-                className={`issues-card__fill ${index === 0 ? 'issues-card__fill--top' : ''}`}
-                style={{ width: `${issue.pct}%` }}
-              />
-            </div>
-          </li>
-        ))}
-      </ul>
+      {issues.length === 0 ? (
+        <div className="flex-1 flex flex-col items-center justify-center py-6 text-center">
+          <p className="text-gray-500 font-medium mb-1">No issues identified yet</p>
+          <p className="text-sm text-gray-400">Share your feedback link to collect data.</p>
+        </div>
+      ) : (
+        <ul className="flex flex-col gap-4 flex-1">
+          {issues.map((issue) => (
+            <li key={issue.label}>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-gray-700 font-medium">{issue.label}</span>
+                <span className="text-sm font-semibold text-gray-700">
+                  {issue.pct}% <span className="text-gray-400 font-normal">({issue.count || Math.round((issue.pct / 100) * totalResponses)})</span>
+                </span>
+              </div>
+              <div
+                className="h-2 w-full bg-gray-200 rounded-full overflow-hidden"
+                role="progressbar"
+                aria-valuenow={issue.pct}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label={`${issue.label}: ${issue.pct}% of responses`}
+              >
+                <div
+                  className="h-full bg-red-600 rounded-full"
+                  style={{ width: `${issue.pct}%` }}
+                />
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
 
-      <div className="issues-card__foot">
-        <button
-          type="button"
-          className="issues-card__expand"
-          aria-expanded={expanded}
-          onClick={() => setExpanded((prev) => !prev)}
-        >
-          {expanded ? 'Show less' : 'View all'}
-          <svg
-            className={`issues-card__expand-chevron ${expanded ? 'issues-card__expand-chevron--open' : ''}`}
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M6 9l6 6 6-6"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-        <Link to={to} className="issues-card__more">
+      <div className="mt-8">
+        {/* <Link to={to} className="inline-flex items-center gap-1 text-lg font-semibold text-[#630ED4] hover:text-[#5a0cb0] transition-colors">
           View all Issues
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path
-              d="M5 12h14M13 6l6 6-6 6"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </Link>
+          <ArrowRight className="w-4 h-4" />
+        </Link> */}
       </div>
     </div>
   )

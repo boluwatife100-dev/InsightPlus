@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import StarRating from '../StarRating.jsx'
 import SentimentBadge from '../SentimentBadge.jsx'
 import './RecentFeedbackFeed.css'
+import { ArrowRight, ChevronRight } from 'lucide-react'
 
 // Vector mood icons (single-color line style; no emoji chars).
 const MOOD_ICONS = {
@@ -28,25 +29,44 @@ const MOOD_ICONS = {
   ),
 }
 
+function timeAgo(dateString) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const seconds = Math.floor((now - date) / 1000);
+  
+  if (isNaN(seconds)) return dateString; // Fallback if invalid date
+  if (seconds < 60) return 'just now';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+}
+
 // Recent feedback feed — latest submissions with star rating + comment (PRD §5.5).
 // Items are fed by the realtime backend subscription in Phase 3. On mobile,
 // only the 3 most recent items show with a 1-line comment preview.
 export default function RecentFeedbackFeed({ items, to = '/dashboard/feedback' }) {
   return (
-    <div className="card feed-card">
-      <div className="feed-card__head">
-        <div>
-          <h3 className="card-title">Recent Feedback</h3>
-          <p className="card-subtitle">Latest submissions, auto-tagged</p>
+    <div className="card feed-card rounded-sm!">
+      <div className="">
+        <div className='flex flex-row justify-between items-center'>
+          <h3 className="font-semibold text-lg ">Recent Feedback</h3>
+
+          <Link to={to} className="flex gap-1 items-center font-semibold text-lg">
+          View all Feedbacks
+          <ArrowRight size={20}/>
+        </Link>
         </div>
-        <span className="feed-card__count">{items.length} new</span>
+       
       </div>
 
-      <ul className="feed-card__list">
-        {items.map((item, index) => (
+      <ul className="feed-card__list my-4! overflow-y-auto ">
+        {items.slice(0, 3).map((item, index) => (
           <li
             key={item.id}
-            className={`feed-card__item ${index > 2 ? 'feed-card__item--extra' : ''}`}
+            className={`feed-card__item hover:bg-[#630ED4]/5 p-3! ${index > 2 ? 'feed-card__item--extra' : ''}`}
           >
             <div className="feed-card__top">
               <div className="feed-card__identity">
@@ -56,38 +76,24 @@ export default function RecentFeedbackFeed({ items, to = '/dashboard/feedback' }
                 >
                   {MOOD_ICONS[item.sentiment] ?? MOOD_ICONS.neutral}
                 </span>
-                <span className="avatar feed-card__avatar" aria-hidden="true">
-                  {item.author === 'Anonymous' ? '·' : item.author.slice(0, 2).toUpperCase()}
-                </span>
                 <div>
                   <strong className="feed-card__name">{item.author}</strong>
-                  <span className="feed-card__time">{item.createdAt}</span>
+                  <span className="feed-card__time">{timeAgo(item.createdAt)}</span>
                 </div>
               </div>
               <StarRating value={item.rating} readOnly size="sm" />
             </div>
-            <p className="feed-card__comment feed-card__comment--clamp">{item.comment}</p>
+            <p className="feed-card__comment feed-card__comment--clamp font-mono!">{item.comment}</p>
             <div className="feed-card__meta">
               <SentimentBadge sentiment={item.sentiment} />
-              <span className="feed-card__category">{item.category}</span>
+              {/* <span className="feed-card__category">{item.category}</span> */}
             </div>
           </li>
         ))}
       </ul>
 
       <div className="feed-card__foot">
-        <Link to={to} className="feed-card__more">
-          View all Feedbacks
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path
-              d="M5 12h14M13 6l6 6-6 6"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </Link>
+        
       </div>
     </div>
   )

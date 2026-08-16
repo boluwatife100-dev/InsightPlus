@@ -5,25 +5,27 @@
 // touching any component code.
 //
 //   VITE_API_URL    base URL of the API (must end with "/"), e.g.
-//                   https://api.insightplus.example/v1/
-//   VITE_USE_MOCK   "false" to use the real API; anything else
-//                   (or unset) keeps the bundled demo data.
+//                   http://localhost:5000/api/
+//
+// The frontend now uses the real backend routes by default.
 // See /.env.example
 // ============================================================
 
-const apiUrl = (import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api/v1/').replace(/\/?$/, '/')
+const apiUrl = (import.meta.env.VITE_API_URL ?? 'http://localhost:5001/api/').replace(/\/?$/, '/')
 
 export const config = {
   apiUrl,
-  useMock: import.meta.env.VITE_USE_MOCK !== 'false',
-  defaultRange: { from: '2026-07-01', to: '2026-07-31' },
-  requestTimeoutMs: 10000,
+  defaultRange: { 
+    from: new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().slice(0, 10), 
+    to: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).toISOString().slice(0, 10) 
+  },
+  requestTimeoutMs: 60000,
 }
 
 // Used by Login for the quick "demo account" fill (PRD §10 — auth is
 // mocked for the hackathon; the real backend provides these instead).
 export const DEMO_CREDENTIALS = {
-  email: 'demo@insightplus.app',
+  email: 'demo@InsightLoop.app',
   password: 'demo1234',
   business: 'Rite Restaurant',
 }

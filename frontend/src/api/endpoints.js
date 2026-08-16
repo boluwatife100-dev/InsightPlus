@@ -9,6 +9,7 @@
 export const ENDPOINTS = {
   auth: {
     login: 'auth/login',
+    signup: 'auth/signup',
     logout: 'auth/logout',
     me: 'users/me',
   },
@@ -21,6 +22,7 @@ export const ENDPOINTS = {
   },
   aiInsights: {
     summary: 'ai-insights',
+    generate: 'ai-insights/generate',
   },
   feedback: {
     list: 'feedback',

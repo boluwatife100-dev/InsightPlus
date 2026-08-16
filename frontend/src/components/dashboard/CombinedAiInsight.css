@@ -1,0 +1,105 @@
+.combined-ai-card {
+  display: flex;
+  background-color: #F1EBFF;
+  border-radius: 8px;
+  padding: 24px;
+  margin: 16px 0;
+  gap: 24px;
+  border: 1px solid #F1EBFF;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: #333;
+}
+
+.combined-ai-card__left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.combined-ai-card__right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.combined-ai-card__divider {
+  width: 1px;
+  background-color: #c8c2ce;
+  margin: 0 8px;
+}
+
+.combined-ai-card__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.combined-ai-card__icon {
+  color: #6e26e2;
+  width: 20px;
+  height: 20px;
+  display: flex;
+}
+
+.combined-ai-card__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.combined-ai-card__title {
+  color: #6e26e2;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.combined-ai-card__text {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+  color: #444;
+}
+
+.combined-ai-card__text strong {
+  font-weight: 700;
+  color: #222;
+}
+
+.combined-ai-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #222;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  border: 1px solid #6e26e2;
+  border-radius: 6px;
+  padding: 8px 16px;
+  width: fit-content;
+  margin-top: 8px;
+  transition: all 0.2s ease;
+}
+
+.combined-ai-card__link:hover {
+  background-color: #ede7f6;
+}
+
+.combined-ai-card__link svg {
+  width: 16px;
+  height: 16px;
+  color: #6e26e2;
+}
+
+@media (max-width: 768px) {
+  .combined-ai-card {
+    flex-direction: column;
+  }
+  .combined-ai-card__divider {
+    width: 100%;
+    height: 1px;
+    margin: 8px 0;
+  }
+}

@@ -1,7 +1,6 @@
 import CsatScoreCard from '../../components/dashboard/CsatScoreCard.jsx'
 import StatCard from '../../components/dashboard/StatCard.jsx'
-import AiInsightCard from '../../components/dashboard/AiInsightCard.jsx'
-import RecommendedActionCard from '../../components/dashboard/RecommendedActionCard.jsx'
+import CombinedAiInsight from '../../components/dashboard/CombinedAiInsight.jsx'
 import IssuesBreakdown from '../../components/dashboard/IssuesBreakdown.jsx'
 import RecentFeedbackFeed from '../../components/dashboard/RecentFeedbackFeed.jsx'
 import { dashboardService } from '../../services/index.js'
@@ -26,10 +25,7 @@ export default function Overview() {
         <div className="dash__span-5">
           <div className="card skeleton-card" style={{ height: '14rem' }} />
         </div>
-        <div className="dash__span-6">
-          <div className="card skeleton-card" style={{ height: '12rem' }} />
-        </div>
-        <div className="dash__span-6">
+        <div className="dash__span-12">
           <div className="card skeleton-card" style={{ height: '12rem' }} />
         </div>
         <div className="dash__span-6">
@@ -54,8 +50,16 @@ export default function Overview() {
     )
   }
 
+  if (!data) {
+    return (
+      <div className="card error-card" role="alert">
+        <p className="error-card__title">No data available.</p>
+      </div>
+    )
+  }
+
   return (
-    <div>
+    <div className="">
       <div className="dash__grid">
         {/* Row 1 */}
         <div className="dash__span-7">
@@ -63,7 +67,7 @@ export default function Overview() {
         </div>
         <div className="dash__span-5">
           <StatCard
-            label="New Responses"
+            label=""
             value={data.newResponses.count}
             delta={data.newResponses.delta}
             deltaTone="down"
@@ -83,16 +87,17 @@ export default function Overview() {
         </div>
 
         {/* Row 2 */}
-        <div className="dash__span-6">
-          <AiInsightCard summary={data.aiSummary.text} highlights={data.aiSummary.highlights} />
-        </div>
-        <div className="dash__span-6">
-          <RecommendedActionCard text={data.recommendedAction.text} />
+        <div className="dash__span-12 rounded-sm">
+          <CombinedAiInsight 
+            summary={data.aiSummary.text} 
+            highlights={data.aiSummary.highlights} 
+            actionText={data.recommendedAction.text} 
+          />
         </div>
 
         {/* Row 3 */}
         <div className="dash__span-6">
-          <IssuesBreakdown issues={data.frictionPoints} />
+          <IssuesBreakdown issues={data.frictionPoints} totalResponses={data.newResponses.count} />
         </div>
         <div className="dash__span-6">
           <RecentFeedbackFeed items={data.recentFeedback} />

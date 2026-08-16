@@ -18,7 +18,7 @@ export const mockBusinesses = [
 ]
 
 export const DEMO_ACCOUNT = {
-  email: 'demo@insightplus.app',
+  email: 'demo@InsightLoop.app',
   password: 'demo1234',
   business: 'Rite Restaurant',
 }

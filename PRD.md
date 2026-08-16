@@ -1,10 +1,10 @@
 # Product Requirements Document (PRD)
-## InsightPlus — AI-Powered Customer Feedback Analytics
+## InsightLoop — AI-Powered Customer Feedback Analytics
 
 ---
 
 ### 1. Overview
-InsightPlus turns raw customer feedback into clear business decisions automatically. Instead of dumping responses into a spreadsheet, InsightPlus collects feedback, tags it (sentiment + recurring theme), and surfaces the most important issue a business should act on — in a live dashboard.
+InsightLoop turns raw customer feedback into clear business decisions automatically. Instead of dumping responses into a spreadsheet, InsightLoop collects feedback, tags it (sentiment + recurring theme), and surfaces the most important issue a business should act on — in a live dashboard.
 
 **One-liner:** "Other tools collect feedback. We turn it into decisions — automatically."
 

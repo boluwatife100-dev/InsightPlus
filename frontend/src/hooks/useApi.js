@@ -42,6 +42,7 @@ export function useApi(loader, deps = []) {
   }, [tick, depsKey])
 
   const reload = () => setTick((value) => value + 1)
+  const setData = (newData) => setState((prev) => ({ ...prev, data: newData }))
 
-  return { ...state, reload }
+  return { ...state, reload, setData }
 }
