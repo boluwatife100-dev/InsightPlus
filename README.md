@@ -34,3 +34,4 @@ Demo login (mock mode): `demo@InsightLoop.app` / `demo1234`.
 - Mock data is intentionally left in place as a live-demo fallback; do not
   remove it even after real endpoints are wired. The app can be switched to
   the real backend with `VITE_USE_MOCK=false` + `VITE_API_URL`.
+Whekak
