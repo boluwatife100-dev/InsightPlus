@@ -19,7 +19,7 @@ export const config = {
     from: new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().slice(0, 10), 
     to: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).toISOString().slice(0, 10) 
   },
-  requestTimeoutMs: 10000,
+  requestTimeoutMs: 60000,
 }
 
 // Used by Login for the quick "demo account" fill (PRD §10 — auth is

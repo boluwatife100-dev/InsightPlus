@@ -95,6 +95,13 @@ export default function DashboardLayout() {
   const closeMenu = () => setMenuOpen(false)
   const isOverview = location.pathname === '/dashboard'
 
+  const getGreetingTime = () => {
+    const currentHour = new Date().getHours()
+    if (currentHour < 12) return 'morning'
+    if (currentHour < 18) return 'afternoon'
+    return 'evening'
+  }
+
   const handleLogout = async () => {
     try {
       await authService.logout()
@@ -104,20 +111,51 @@ export default function DashboardLayout() {
     }
   }
 
-  const getGreetingTime = () => {
-    const currentHour = new Date().getHours()
-
-    if (currentHour < 12) return 'morning'
-    if (currentHour < 18) return 'afternoon'
-    return 'evening'
-  }
-
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
     return () => {
       document.body.style.overflow = ''
     }
   }, [menuOpen])
+
+  if (meQuery.loading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#630ED4]"></div>
+      </div>
+    )
+  }
+
+  if (meQuery.error) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-gray-50 px-4">
+        <div className="w-full max-w-sm rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#630ED4]/10">
+            <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6 text-[#630ED4]" aria-hidden="true">
+              <path
+                d="M12 9v4m0 4h.01M10.29 3.86l-8.18 14.18A2 2 0 0 0 4 21h16a2 2 0 0 0 1.89-2.96L13.71 3.86a2 2 0 0 0-3.42 0z"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+          <h2 className="text-lg font-semibold text-gray-900">Session expired</h2>
+          <p className="mt-1 text-sm text-gray-500">
+            Please log in again to access your dashboard.
+          </p>
+          <Link
+            to="/login"
+            className="btn btn-primary mt-6 inline-flex w-full items-center justify-center rounded-sm py-2.5"
+          >
+            Go to login
+          </Link>
+        </div>
+      </div>
+    )
+
+  }
 
   return (
     <div className="dash">

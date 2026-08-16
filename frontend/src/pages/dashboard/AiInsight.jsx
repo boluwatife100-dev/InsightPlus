@@ -4,24 +4,52 @@ import IssuesBreakdown from '../../components/dashboard/IssuesBreakdown.jsx'
 import { aiInsightsService } from '../../services/index.js'
 import { useApi } from '../../hooks/useApi.js'
 
+const MAX_CLIENT_RETRIES = 2
+const RETRY_DELAY_MS = 1500
+
 // AI Insights page — detail view of the analysis the AI produced from the
 // feedback pipeline: summary, recommended action, and theme breakdown.
 export default function AiInsight() {
   const { data, error, loading, reload, setData } = useApi(() => aiInsightsService.getInsights(), [])
   const [generating, setGenerating] = useState(false)
   const [generateError, setGenerateError] = useState(null)
+  const [generateStage, setGenerateStage] = useState('')
+
+  const isTimeoutError = (err) =>
+    err?.code === 'ECONNABORTED' || /timeout/i.test(err?.message || '')
 
   const handleGenerate = async () => {
     setGenerating(true)
     setGenerateError(null)
-    try {
-      const newData = await aiInsightsService.generateInsights()
-      setData(newData)
-    } catch (err) {
-      setGenerateError(err.message || 'Failed to generate insights.')
-    } finally {
-      setGenerating(false)
+
+    let lastError = null
+
+    for (let attempt = 0; attempt <= MAX_CLIENT_RETRIES; attempt++) {
+      setGenerateStage(
+        attempt === 0
+          ? 'Analyzing feedback…'
+          : `Taking longer than usual, retrying… (${attempt}/${MAX_CLIENT_RETRIES})`
+      )
+
+      try {
+        const newData = await aiInsightsService.generateInsights()
+        setData(newData)
+        setGenerating(false)
+        setGenerateStage('')
+        return
+      } catch (err) {
+        lastError = err
+        // Only auto-retry on timeout-like errors — a real failure (e.g. 400/500)
+        // should surface immediately rather than being retried silently.
+        const shouldRetry = isTimeoutError(err) && attempt < MAX_CLIENT_RETRIES
+        if (!shouldRetry) break
+        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS * (attempt + 1)))
+      }
     }
+
+    setGenerateError(lastError?.message || 'Failed to generate insights.')
+    setGenerating(false)
+    setGenerateStage('')
   }
 
   if (loading) {
@@ -80,7 +108,7 @@ export default function AiInsight() {
             onClick={handleGenerate}
             disabled={generating}
           >
-            {generating ? 'Generating...' : 'Get Latest AI Insight'}
+            {generating ? generateStage || 'Generating…' : 'Get Latest AI Insight'}
           </button>
           {data.updatedAt && (
             <span className="text-xs text-gray-500 mt-2 block">

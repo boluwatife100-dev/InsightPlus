@@ -3,16 +3,16 @@ const User = require('../models/User');
 const Business = require('../models/Business');
 
 const createToken = (userId) => {
-  const secret = process.env.JWT_SECRET || 'InsightLoop-secret';
+  const secret = process.env.JWT_SECRET;
   return jwt.sign({ userId }, secret, { expiresIn: '7d' });
 };
 
 const signup = async (req, res, next) => {
   try {
-    const { email, password, businessName, ownerName } = req.body;
+    const { email, password, businessName, businessType, ownerName } = req.body;
 
-    if (!email || !password || !businessName || !ownerName) {
-      return res.status(400).json({ detail: 'Email, password, business name, and owner name are required.' });
+    if (!email || !password || !businessName || !businessType || !ownerName) {
+      return res.status(400).json({ detail: 'Email, password, business name, business type, and owner name are required.' });
     }
 
     const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
@@ -51,6 +51,7 @@ const signup = async (req, res, next) => {
 
     const business = new Business({
       name: businessName.trim(),
+      type: businessType,
       initials: initials || 'B',
       email: user.email,
       owner: user.id,

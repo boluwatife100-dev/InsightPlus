@@ -45,10 +45,10 @@ export async function login({ email, password }) {
  * @param {{ email: string, password: string, businessName: string, ownerName: string }} credentials
  * @returns {Promise<User>}
  */
-export async function signup({ email, password, businessName, ownerName }) {
+export async function signup({ email, password, businessName, businessType, ownerName }) {
   const data = await apiFetch(ENDPOINTS.auth.signup, {
     method: 'POST',
-    body: { email, password, businessName, ownerName },
+    body: { email, password, businessName, businessType, ownerName },
   })
   setToken(data.token)
   return data.user
