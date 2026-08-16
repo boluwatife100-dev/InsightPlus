@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { toast } from 'sonner'
 import CsatScoreCard from '../../components/dashboard/CsatScoreCard.jsx'
 import StatCard from '../../components/dashboard/StatCard.jsx'
 import CombinedAiInsight from '../../components/dashboard/CombinedAiInsight.jsx'
@@ -15,6 +17,18 @@ export default function Overview() {
     () => dashboardService.getOverview(config.defaultRange),
     [],
   )
+
+  useEffect(() => {
+    if (error) {
+      toast.error("Couldn't load your dashboard.", {
+        description: error.message,
+        action: {
+          label: "Try again",
+          onClick: reload
+        }
+      })
+    }
+  }, [error, reload])
 
   if (loading) {
     return (
@@ -42,10 +56,7 @@ export default function Overview() {
     return (
       <div className="card error-card" role="alert">
         <p className="error-card__title">Couldn't load your dashboard.</p>
-        <p className="error-card__detail">{error.message}</p>
-        <button type="button" className="btn btn-secondary btn-sm" onClick={reload}>
-          Try again
-        </button>
+        <p className="error-card__detail">Please try again.</p>
       </div>
     )
   }
