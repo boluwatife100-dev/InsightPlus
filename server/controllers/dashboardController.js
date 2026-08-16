@@ -108,15 +108,18 @@ const getOverview = async (req, res, next) => {
     };
     
     // Dynamically calculate category breakdown as a fallback for friction points
+    const negativeFeedback = allFeedback.filter(f => f.rating <= 3);
     const categoryCounts = {};
-    allFeedback.forEach(f => {
-      categoryCounts[f.category] = (categoryCounts[f.category] || 0) + 1;
+    negativeFeedback.forEach(f => {
+      if (f.category) {
+        categoryCounts[f.category] = (categoryCounts[f.category] || 0) + 1;
+      }
     });
     
     let frictionPoints = Object.entries(categoryCounts)
       .map(([label, count]) => ({
         label,
-        pct: Math.round((count / scoreCount) * 100),
+        pct: Math.round((count / (negativeFeedback.length || 1)) * 100),
         count
       }))
       .sort((a, b) => b.count - a.count)

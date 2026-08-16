@@ -42,15 +42,18 @@ const getInsights = async (req, res, next) => {
 
     // Default fallback if no insights have ever been generated for this business
     const allFeedback = await Feedback.find({ business: business._id }).lean();
+    const negativeFeedback = allFeedback.filter(f => f.rating <= 3);
     const categoryCounts = {};
-    allFeedback.forEach(f => {
-      categoryCounts[f.category] = (categoryCounts[f.category] || 0) + 1;
+    negativeFeedback.forEach(f => {
+      if (f.category) {
+        categoryCounts[f.category] = (categoryCounts[f.category] || 0) + 1;
+      }
     });
     
     let topIssues = Object.entries(categoryCounts)
       .map(([label, count]) => ({
         label,
-        pct: Math.round((count / feedbackCount) * 100),
+        pct: Math.round((count / (negativeFeedback.length || 1)) * 100),
         count
       }))
       .sort((a, b) => b.count - a.count)
@@ -84,7 +87,7 @@ const generateInsights = async (req, res, next) => {
       return res.status(404).json({ detail: 'No business found.' });
     }
 
-    const feedback = await Feedback.find().sort({ createdAt: -1 }).lean();
+    const feedback = await Feedback.find({ business: business._id }).sort({ createdAt: -1 }).lean();
     
     const aiData = await generateInsight(feedback.map(f => ({ rating: f.rating, comment: f.comment, category: f.category })));
 
